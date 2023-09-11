@@ -1,0 +1,65 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// model User {
+//   id    String  @id @default(auto()) @map("_id") @db.ObjectId
+//   email String  @unique
+//   name  String?
+//   runs  Run[]
+// }
+
+enum STOP {
+  convergence
+  isFit
+  maxGen
+}
+
+model Run {
+  id                         String @id @default(auto()) @map("_id") @db.ObjectId
+  // user                       User?   @relation(fields: [userId], references: [id])
+  // userId                     String @db.ObjectId
+  mbGenSize                  Int
+  mbPopSize                  Int
+  mbMutationProbability      Int
+  mbMovingAverage            Int
+  smrGenSize                 Int
+  smrPopSize                 Int
+  smrMutationProbability     Int
+  smrMovingAverage           Int
+  pressureLowerbound         Int
+  pressureUpperbound         Int
+  temperatureLowerbound      Int
+  temperatureUpperbound      Int
+  steamCarbonRatioLowerbound Int
+  steamCarbonRatioUpperbound Int
+  standardPressure           Float
+  ch4                        Float?
+  c2h6                       Float?
+  c3h8                       Float?
+  ic4                        Float?
+  nc4                        Float?
+  ic5                        Float?
+  nc5                        Float?
+  ic6                        Float?
+  nc6                        Float?
+  h2                         Float?
+  n2                         Float?
+  co2                        Float?
+  stopCondition              STOP // convergence, fitness or max gen_size
+  numberOfGenerationsRan     Int
+  pressure                   Float
+  temperature                Float
+  steamToCarbonRatio         Float
+  outputH2                   Float
+  outputH2O                  Float
+  outputCO2                  Float
+  outputCO                   Float
+  outputCH4                  Float
+  timeTaken                  String
+}

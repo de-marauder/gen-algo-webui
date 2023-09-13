@@ -51,14 +51,14 @@ export const main = ({
     }
   );
 
-  const populationLines: string[][] = [];
+  // const populationLines: string[][] = [];
   // const populationFirstLine: string[] = []
-  // const individualFirstLine: string[] = []
-  const firstLine: string[] = [];
-  for (const id of Object.keys(algo.population.population)) {
-    firstLine.push(`Population ${+id + 1}`);
-  }
-  populationLines.push(firstLine);
+  // // const individualFirstLine: string[] = []
+  // const firstLine: string[] = [];
+  // for (const id of Object.keys(algo.population.population)) {
+  //   firstLine.push(`Population ${+id + 1}`);
+  // }
+  // populationLines.push(firstLine);
 
   let id = 0;
   while (!algo.stop) {
@@ -69,31 +69,31 @@ export const main = ({
     for (const [, individual] of Object.entries(
       algo.population.population
     )) {
-      let column = '';
-      column += `fitness = ${individual.fitness.toFixed(2)} kmol  `;
-      column += `pres = ${individual.traits.pressure.toFixed(
-        2
-      )} bar  `;
-      column += `temp = ${individual.traits.temperature.toFixed(
-        2
-      )} K  `;
-      column += `C/S = ${individual.traits.steamCarbonRatio.toFixed(
-        2
-      )}  `;
-      column += `H2 = ${individual.fitness.toFixed(2)} kmol  `;
-      column += `CO2 = ${individual.y.toFixed(2)} kmol  `;
-      column += `CO = ${individual.b.toFixed(2)} kmol  `;
-      column += `H2O = ${individual.h.toFixed(2)} kmol  `;
-      column += `CH4 = ${individual.a.toFixed(2)} kmol  `;
-      line.push(column);
+      // let column = '';
+      // column += `fitness = ${individual.fitness.toFixed(2)} kmol  `;
+      // column += `pres = ${individual.traits.pressure.toFixed(
+      //   2
+      // )} bar  `;
+      // column += `temp = ${individual.traits.temperature.toFixed(
+      //   2
+      // )} K  `;
+      // column += `C/S = ${individual.traits.steamCarbonRatio.toFixed(
+      //   2
+      // )}  `;
+      // column += `H2 = ${individual.fitness.toFixed(2)} kmol  `;
+      // column += `CO2 = ${individual.y.toFixed(2)} kmol  `;
+      // column += `CO = ${individual.b.toFixed(2)} kmol  `;
+      // column += `H2O = ${individual.h.toFixed(2)} kmol  `;
+      // column += `CH4 = ${individual.a.toFixed(2)} kmol  `;
+      // line.push(column);
     }
-    populationLines.push(line);
+    // populationLines.push(line);
     // console.log(
     //   JSON.stringify(algo.population.population.map(el => `{${el.fitness}; ${el.traits.pressure}}`))
     //     .split(',')
     //     .join(',    ')
     // );
-    console.log('=====================================\n');
+    // console.log('=====================================\n');
     id++;
   }
   // console.log(`\n======= BEST SMR Population ========`)

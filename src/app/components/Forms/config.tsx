@@ -141,12 +141,13 @@ export const ConfigForm: React.FC<{
       console.log(error)
     }
   }
+  const configHeaderStyles = 'font-bold text-3xl mb-4 text-blue-800 underline underline-offset-8 decoration-wavy';
 
   return (
     <>
       <form onSubmit={(e => { handleSubmit(e) })}>
         <div id="smr" className="mb-16">
-          <h3 className='font-bold text-3xl mb-2'>SMR - Config</h3>
+          <h3 className={configHeaderStyles}>SMR - Config</h3>
           {Object.entries(smrConf).map(([k, v], id) => {
             return (
               <SmrConfInput
@@ -161,7 +162,7 @@ export const ConfigForm: React.FC<{
           })}
         </div >
         <div id='mb' className='mb-16'>
-          <h3 className='font-bold text-3xl mb-2'>MB - Config</h3>
+          <h3 className={configHeaderStyles}>MB - Config</h3>
           {Object.entries(mbConf).map(([k, v], id) => {
             return (
               <MbConfInput
@@ -176,7 +177,7 @@ export const ConfigForm: React.FC<{
           })}
         </div>
         <div id='composition' className='mb-16'>
-          <h3 className='font-bold text-3xl mb-2'>Flare composition in mole mole fraction</h3>
+          <h3 className={configHeaderStyles}>Flare composition in mole mole fraction</h3>
           <div className="flex flex-wrap gap-4">
             {Object.entries(composition).map(([k, v], id) => {
               return (
@@ -193,7 +194,7 @@ export const ConfigForm: React.FC<{
           </div>
         </div>
         <div id='boundaries' className='mb-16'>
-          <h3 className='font-bold text-3xl mb-2'>Decision variable boundaries</h3>
+          <h3 className={configHeaderStyles}>Decision variable boundaries</h3>
           <div className="flex flex-wrap gap-4">
             {Object.entries(traitBounds).map(([k, v], id) => {
               return (
@@ -210,7 +211,7 @@ export const ConfigForm: React.FC<{
           </div>
         </div>
         <div className='mb-16'>
-          <h3 className='font-bold text-3xl mb-2'>Constants</h3>
+          <h3 className={configHeaderStyles}>Constants</h3>
           <div className="flex flex-wrap gap-4">
             <StPressureConfInput
               k={'standardPressure'}

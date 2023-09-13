@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
           <Header />
-          <main className='overflow-x-hidden w-[100vw]'>
+          <main className=''>
             <div className="min-h-[80vh]">
               <div className='flex flex-col items-center justify-between'>
                 <Blur />

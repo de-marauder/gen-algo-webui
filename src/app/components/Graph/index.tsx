@@ -198,14 +198,6 @@ export const LineChart: React.FC<{
         verticalLine.style('opacity', 0);
       });
 
-    // tooltip for data point
-    const tooltipBackground = svg.
-      append('rect')
-    const tooltipTextX = svg.append('text')
-      .attr('fill', 'white')
-    const tooltipTextY = svg.append('text')
-      .attr('fill', 'white')
-
     // Add a hover effect
     svg.selectAll('.dot')
       .data(data)
@@ -221,7 +213,7 @@ export const LineChart: React.FC<{
         // Handle mouseover event (show tooltip)
         tooltipBackground
           .attr('fill', 'black')
-          .attr('width', '100')
+          .attr('width', '120')
           .attr('height', '50')
           .attr('x', mouseX - 30)
           .attr('y', mouseY - 30);
@@ -242,6 +234,14 @@ export const LineChart: React.FC<{
         tooltipTextY.text('')
       });
 
+    // tooltip for data point
+    const tooltipBackground = svg.
+      append('rect')
+    const tooltipTextX = svg.append('text')
+      .attr('fill', 'white')
+    const tooltipTextY = svg.append('text')
+      .attr('fill', 'white');
+
   }, [data, margin, width, height]);
 
   const svgWidth = `${width + margin.left + margin.right}px`;
@@ -260,7 +260,14 @@ export const LineChart: React.FC<{
             </center>
           </div>
         )}
-        <svg ref={svgRef} width={svgWidth} height={svgHeight}></svg>
+        <svg
+          ref={svgRef}
+          // className={`
+          // // w-[300px] h-[300px] 
+          // // md:w-[${svgWidth}] sm:h-[${svgHeight}]
+          // `} 
+          width={svgWidth} height={svgHeight}
+        ></svg>
         <p className='text-center'>{xLabel}</p>
       </div>
       <figcaption className='mt-2 text-center text-xl'><strong>{caption}</strong></figcaption>

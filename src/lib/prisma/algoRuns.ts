@@ -42,6 +42,7 @@ export type AlgoResult = {
   outputCO: number;
   outputCH4: number;
   timeTaken: string;
+  id: string;
 }
 
 export const saveAlgoResults = async (data: AlgoResult) => {
@@ -67,5 +68,14 @@ export const getAlgoResults = async () => {
   } catch (error) {
     console.log('Error = ', error)
     return {runs: null, error: error as Error}
+  }
+}
+export const getAlgoResultById = async (id: string) => {
+  try {
+    const run = await prisma.run.findUnique({where: {id}});
+    return {run, error: null}
+  } catch (error) {
+    console.log('Error = ', error)
+    return {run: null, error: error as Error}
   }
 }

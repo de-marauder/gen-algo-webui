@@ -4,7 +4,7 @@ import { Button } from "../Buttons/Buttons";
 export const Modal: React.FC<{ children?: ReactNode, message?: string, noCloseButton?: boolean; toggle: () => void, isError?: boolean }> = ({ children, noCloseButton, message, toggle, isError }) => {
   return (
     <Backdrop>
-      <div onClick={(e => { e.stopPropagation() })} className="min-w-[300px] grid place-items-center max-w-[400px] min-h-[200px] bg-black/95 text-white shadow-3xl p-4 mx-auto rounded-xl">
+      <div onClick={(e => { e.stopPropagation() })} className="min-w-[300px] grid place-items-center max-w-[500px] min-h-[200px] md:max-h-[60vh] bg-black/95 text-white shadow-3xl p-4 mx-auto rounded-xl">
         <p style={isError ? { color: 'red' } : {}}>{message}</p>
         {children}
         {!noCloseButton && <Button onClick={toggle} type="sm">Close</Button>}

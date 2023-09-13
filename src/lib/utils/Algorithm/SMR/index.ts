@@ -372,11 +372,11 @@ export class SMRGeneticsAlgorithm {
 
       const converged =
         +movingAverage.toFixed(4) === listOfBestIndividualsFitness[0];
-      if (converged) {
-        console.log(
-          `========== SMR HAS CONVERGED after ${this.generations.length} genenrations ============`
-        );
-      }
+      // if (converged) {
+      //   console.log(
+      //     `========== SMR HAS CONVERGED after ${this.generations.length} genenrations ============`
+      //   );
+      // }
 
       return converged;
     }

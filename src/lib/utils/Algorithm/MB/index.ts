@@ -78,9 +78,9 @@ export class MBGeneticsAlgorithm {
 					individualB = this.tournamentSelection();
 				}
 				else if (counter > 100) {
-					console.log('Same individuals picked', individualA, individualB)
-					console.log(this.population.population)
-					console.log(this.population.population.length)
+					// console.log('Same individuals picked', individualA, individualB)
+					// console.log(this.population.population)
+					// console.log(this.population.population.length)
 					throw Error('Biased roulette failed to select')
 				}
 				counter++
@@ -141,13 +141,13 @@ export class MBGeneticsAlgorithm {
 				return this.population.population[i];
 			}
 		}
-		console.log('fitnessArr: ', fitnessArr)
-		console.log('sum: ', sum)
-		console.log('sum2: ', sum2)
-		console.log('randProb: ', randProb)
-		console.log('probabilityDistribution: ', probabilityDistribution)
-		console.log('probabilityDistribution2: ', probabilityDistribution2)
-		console.log('cummulatedProbabilityDistribution: ', cummulatedProbabilityDistribution)
+		// console.log('fitnessArr: ', fitnessArr)
+		// console.log('sum: ', sum)
+		// console.log('sum2: ', sum2)
+		// console.log('randProb: ', randProb)
+		// console.log('probabilityDistribution: ', probabilityDistribution)
+		// console.log('probabilityDistribution2: ', probabilityDistribution2)
+		// console.log('cummulatedProbabilityDistribution: ', cummulatedProbabilityDistribution)
 		throw new Error(
 			'Biased roulette selection could not select an individual'
 		);
@@ -283,10 +283,10 @@ export class MBGeneticsAlgorithm {
 
 			const converged =
 				+movingAverage.toFixed(4) === listOfBestIndividualsFitness[0];
-			if (converged)
-				console.log(
-					`========== MB HAS CONVERGED after ${this.generations.length} genenrations ============`
-				);
+			// if (converged)
+			// 	console.log(
+			// 		`========== MB HAS CONVERGED after ${this.generations.length} genenrations ============`
+			// 	);
 			return converged;
 		}
 		return false;

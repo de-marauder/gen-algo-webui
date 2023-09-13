@@ -62,7 +62,7 @@ export class Population {
         return prev + curr;
       });
     const fit = sum === this.size * this.population[0].fitness;
-    if (fit) console.log(`========== IS FIT ============`);
+    // if (fit) console.log(`========== IS FIT ============`);
 
     return fit;
   }

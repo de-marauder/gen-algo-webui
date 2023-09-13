@@ -88,11 +88,11 @@ export const main = ({
       line.push(column);
     }
     populationLines.push(line);
-    console.log(
-      JSON.stringify(algo.population.population.map(el => `{${el.fitness}; ${el.traits.pressure}}`))
-        .split(',')
-        .join(',    ')
-    );
+    // console.log(
+    //   JSON.stringify(algo.population.population.map(el => `{${el.fitness}; ${el.traits.pressure}}`))
+    //     .split(',')
+    //     .join(',    ')
+    // );
     console.log('=====================================\n');
     id++;
   }

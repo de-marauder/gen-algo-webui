@@ -209,7 +209,7 @@ export class SMRIndividual {
 		const lowerBound = this.traitBoundaries.pressureLowerbound;
 		const upperBound = this.traitBoundaries.pressureUpperbound;
 		const p = getRandomNumberInRange(lowerBound, upperBound);
-		console.log('generated pressure: ', p)
+		// console.log('generated pressure: ', p)
 		return p;
 	}
 	
@@ -218,7 +218,7 @@ export class SMRIndividual {
 		const upperBound = this.traitBoundaries.temperatureUpperbound;
 		
 		const p = getRandomNumberInRange(lowerBound, upperBound);
-		console.log('generated TemperatureValue: ', p)
+		// console.log('generated TemperatureValue: ', p)
 		return p;
 	}
 
@@ -227,7 +227,7 @@ export class SMRIndividual {
 		const upperBound = this.traitBoundaries.steamCarbonRatioUpperbound;
 		
 		const p = getRandomNumberInRange(lowerBound, upperBound);
-		console.log('generated CarbonSteamRatioValue: ', p)
+		// console.log('generated CarbonSteamRatioValue: ', p)
 		return p;
 	}
 }

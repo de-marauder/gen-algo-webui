@@ -29,9 +29,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 export default handler;
 
-const buildResult = (data: SMRGeneticsAlgorithm, config: Config, timeTaken: string, user: Record<string, string>): AlgoResult => {
+const buildResult = (data: SMRGeneticsAlgorithm, config: Config, timeTaken: string, user: Record<string, string>): Omit<AlgoResult, 'id'> => {
 
-  const r: AlgoResult = {
+  const r: Omit<AlgoResult, 'id'> = {
     mbGenSize: config.mbConfig.mbGenSize,
     mbMovingAverage: config.mbConfig.mbMovingAverage,
     mbMutationProbability: config.mbConfig.mbMutationProbability,

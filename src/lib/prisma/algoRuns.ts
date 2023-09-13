@@ -42,7 +42,7 @@ export type AlgoResult = {
   outputCO: number;
   outputCH4: number;
   timeTaken: string;
-  id: string;
+  id?: string;
 }
 
 export const saveAlgoResults = async (data: AlgoResult) => {

@@ -1,6 +1,5 @@
 import { main as genAlgo } from './Algorithm/main';
-import fs from 'fs';
-import { Config, ValidRunOptions } from './types';
+import { Config } from './types';
 
 
 export async function runAlgo(config: Config) {

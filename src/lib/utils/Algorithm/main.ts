@@ -62,7 +62,7 @@ export const main = ({
 
   let id = 0;
   while (!algo.stop) {
-    console.log(`\n======= SMR Population ${+id + 1} ========`);
+    // console.log(`\n======= SMR Population ${+id + 1} ========`);
     algo.createNextGeneration();
 
     const line = [];

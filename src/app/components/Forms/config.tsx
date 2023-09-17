@@ -124,12 +124,11 @@ export const ConfigForm: React.FC<{
       standardPressure: +stPressure,
       traitBoundaries: traitBounds
     }
-    const url = '/api/result'
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/run-algo`
     try {
       const { data } = await axios.post<{ result: AlgoResult | null; error: null | Error }>(url, payload)
         .catch((err: AxiosError) => {
-          // setError((err.response?.data as {error: Error}).error.message)
-          return { data: { result: null, error: (err.response?.data as { error: Error }).error}}
+           return { data: { result: null, error: (err.response?.data as { error: Error }).error } }
         });
       if (data.error) throw new Error(data.error.message)
       setLoading(false)

@@ -51,7 +51,7 @@ export const saveAlgoResults = async (data: AlgoResult) => {
       data: {
         ...data
       }
-    })
+    }) as AlgoResult
     // console.log('prisma result: ', result)
     return { result, error: null }
   } catch (error) {

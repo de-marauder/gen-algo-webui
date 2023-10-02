@@ -8,9 +8,21 @@ import Loading from "../loading";
 import Link from "next/link";
 import { Blur } from "../components/utils/Blur";
 
+
+type FieldsInRunsShown = {
+  outputCO: number;
+  outputH2: number;
+  outputCO2: number
+  outputH2O: number;
+  outputCH4: number;
+  pressure: number;
+  temperature: number;
+  steamToCarbonRatio: number
+}
 export const Runs = () => {
 
   const [runs, setRuns] = useState<AlgoResult[] | []>([]);
+  const [averages, setAverages] = useState<Record<string, number>>();
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -19,8 +31,22 @@ export const Runs = () => {
     const url = '/api/runs'
     axios.get<{ runs: AlgoResult[] }>(url)
       .then((response) => {
+        const r = response.data.runs
         setLoading(false);
-        setRuns(response.data.runs)
+        setRuns(r)
+        const av = (r as FieldsInRunsShown[]).reduce((prev, curr) => {
+          return {
+            pressure: prev.pressure + curr.pressure,
+            temperature: prev.temperature + curr.temperature,
+            steamToCarbonRatio: prev.steamToCarbonRatio + curr.steamToCarbonRatio,
+            outputH2: prev.outputH2 + curr.outputH2,
+            outputCO2: prev.outputCO2 + curr.outputCO2,
+            outputCO: prev.outputCO + curr.outputCO,
+            outputH2O: prev.outputH2O + curr.outputH2O,
+            outputCH4: prev.outputCH4 + curr.outputCH4,
+          }
+        })
+        setAverages(av)
       }).catch((error) => {
         setLoading(false);
         setError(error.message);
@@ -35,6 +61,16 @@ export const Runs = () => {
 
   return (
     <div className="mx-auto xl:max-w-full overflow-x-scroll xl:overflow-auto min-h-[60vh] rounded-xl border border-blue-800/20">
+      <div className="bg-blue-800/10">
+        <h1 className="p-2 sm:pt-8 sm:px-8 font-bold sm:text-3xl mb-4">Average results</h1>
+        <div className="grid sm:grid-cols-2 mb-4">
+          {averages && Object.entries(averages).map(([key, val]) => {
+            return (
+              <p key={key} className="px-4 py-2 m-y2 bg-blue-800/20"><strong>{key}</strong>: {(val / runs.length).toFixed(2)}</p>
+            )
+          })}
+        </div>
+      </div>
       <RunCard isHeader={true}>
         <PItem>No</PItem>
         <PItem>Pressure (bar)</PItem>

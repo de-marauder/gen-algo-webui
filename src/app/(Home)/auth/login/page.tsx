@@ -55,22 +55,24 @@ const Page = () => {
       });
   }
   return (
-    <HeroWrapper>
+    <>
       {loading && <Modal noCloseButton toggle={() => { }} ><Loading /></Modal>}
       {responseError && <Modal isError={true} message={responseError} toggle={() => setResponseError('')} />}
-      <div>
-        <Form handleSubmit={handleSubmit} title="Login" hideSubmit={() => errorPresent(error)}>
-          {Object.entries(loginDetails).map(([key, val], id) => {
-            return <Input<LoginDetails>
-              key={key + '-' + id}
-              label={key} value={val}
-              onChange={setLoginDetails}
-              error={error[key as keyof typeof error]}
-              setError={setError} />
-          })}
-        </Form>
-      </div>
-    </HeroWrapper>
+      <HeroWrapper>
+        <div>
+          <Form handleSubmit={handleSubmit} title="Login" hideSubmit={() => errorPresent(error)}>
+            {Object.entries(loginDetails).map(([key, val], id) => {
+              return <Input<LoginDetails>
+                key={key + '-' + id}
+                label={key} value={val}
+                onChange={setLoginDetails}
+                error={error[key as keyof typeof error]}
+                setError={setError} />
+            })}
+          </Form>
+        </div>
+      </HeroWrapper>
+    </>
   )
 }
 

@@ -16,7 +16,7 @@ export const Input = <T extends object>({ label, value, onChange, error, setErro
     <>
       {error && <p className="text-red-500">{error}</p>}
       <div className="flex max-sm:flex-col gap-2xl mb-2">
-        <label className="max-sm:w-full max-sm:p-1 w-[250px] p-2 font-bold border" htmlFor="">{toTitleCase(label)}</label>
+        <label className="max-sm:w-fit max-sm:p-1 w-[250px] p-2 font-bold border" htmlFor="">{toTitleCase(label)}</label>
         <input className=" max-sm:py-2 pl-2 w-full bg-blue-800/50 text-white border"
           placeholder={`Enter ${toTitleCase(label)}`}
           type={(label === 'password' || label === 'confirmPassword') ? 'password' : "text"} name={label} value={value} onChange={(e) => {
@@ -70,7 +70,7 @@ export const Input = <T extends object>({ label, value, onChange, error, setErro
 
 export const Form: React.FC<{ hideSubmit: () => boolean; children: ReactNode; title: string; handleSubmit: (e: FormEvent<HTMLFormElement>) => void }> = ({ hideSubmit, children, handleSubmit, title }) => {
   return (
-    <form className="sm:min-w-[500px]" onSubmit={(e) => handleSubmit(e)}>
+    <form className="mx-2 sm:min-w-[500px]" onSubmit={(e) => handleSubmit(e)}>
       <h1 className="text-xl sm:text-6xl text-center font-bold">{title}</h1>
       <hr className="my-4 border" />
       {children}

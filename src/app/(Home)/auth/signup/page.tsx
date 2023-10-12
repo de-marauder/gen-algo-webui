@@ -7,6 +7,7 @@ import { Form, Input, cookie, errorPresent, redirectRoute, toTitleCase } from ".
 import axios, { AxiosError } from "axios"
 import { Modal } from "@/app/_components/Modals/Modal"
 import ContextStore from "@/app/_components/store/context"
+import Loading from "../../loading"
 
 
 type SignUpDetails = Omit<TypeUser, '_id'>
@@ -20,6 +21,7 @@ const Page = () => {
   const [signUpDetails, setSignUpDetails] = useState<SignUpDetails>({
     username: '', email: '', password: '', confirmPassword: ''
   })
+  const [loading, setLoading] = useState<boolean>(false)
   const [responseError, setResponseError] = useState<string>('');
   const [error, setError] = useState<SignUpDetails>({
     username: '', email: '', password: '', confirmPassword: ''
@@ -46,10 +48,12 @@ const Page = () => {
         'content-type': 'application/json'
       }
     }
+    setLoading(true)
 
     axios.post<{ data: TypeUser }>(url, payload, config)
       .then((response) => {
         // console.log(response)
+        setLoading(false)
         const user = response.data.data;
         cookie.set('jwt-token', user.token)
         delete user.token
@@ -57,6 +61,7 @@ const Page = () => {
         router.push(redirectRoute)
       }).catch((error) => {
         // console.log(error)
+        setLoading(false)
         if (error instanceof AxiosError) setResponseError(error.response?.data.message || 'Error creating user.')
         else setResponseError((error as Error).message)
       });
@@ -64,6 +69,7 @@ const Page = () => {
 
   return (
     <HeroWrapper>
+      {loading && <Modal noCloseButton toggle={() => { }} ><Loading /></Modal>}
       {responseError && <Modal isError={true} message={responseError} toggle={() => setResponseError('')} />}
       <div>
         <Form handleSubmit={handleSubmit} title="Sign Up" hideSubmit={() => errorPresent(error)}>

@@ -72,7 +72,7 @@ const Page = () => {
       {loading && <Modal noCloseButton toggle={() => { }} ><Loading /></Modal>}
       {responseError && <Modal isError={true} message={responseError} toggle={() => setResponseError('')} />}
       <HeroWrapper>
-        <div>
+        <div className="w-full sm:w-fit">
           <Form handleSubmit={handleSubmit} title="Sign Up" hideSubmit={() => errorPresent(error)}>
             {Object.entries(signUpDetails).map(([key, val], id) => {
               return <Input<SignUpDetails>

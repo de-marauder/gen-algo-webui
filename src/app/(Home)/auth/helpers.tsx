@@ -19,7 +19,7 @@ export const Input = <T extends object>({ label, value, onChange, error, setErro
         <label className="max-sm:w-full max-sm:p-1 w-[250px] p-2 font-bold border" htmlFor="">{toTitleCase(label)}</label>
         <input className=" max-sm:py-2 pl-2 w-full bg-blue-800/50 text-white border"
           placeholder={`Enter ${toTitleCase(label)}`}
-          type="text" name={label} value={value} onChange={(e) => {
+          type={(label === 'password' || label === 'confirmPassword') ? 'password' : "text"} name={label} value={value} onChange={(e) => {
             const newVal = e.target.value;
             switch (label) {
               case 'email':

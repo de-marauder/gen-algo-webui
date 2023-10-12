@@ -34,7 +34,7 @@ const Visualizations = () => {
   return (
     <>
       <MainContainer>
-        <section ref={visualisationSectionRef} id='visualizations-section' className='w-full text-white mt-[2rem]'>
+        <section ref={visualisationSectionRef} id='visualizations-section' className='w-full text-white mt-[2rem] '>
           <Blur />
           <h1 className="text-4xl max-sm:text-2xl max-sm:pl-2 mb-8 sm:text-center">
             <strong>Graph Visualizations</strong>
@@ -46,10 +46,10 @@ const Visualizations = () => {
               setConfigId={setConfigId}
               setConfigs={setConfigs} />
           </div>
-          <section id='graphs' className="max-sm:w-[100vw] overflow-x-scroll h-[80vh] overflow-scroll flex flex-wrap gap-8 justify-center pb-8">
+          <section id='graphs' className="max-sm:w-full overflow-x-scroll h-[80vh] overflow-scroll flex flex-wrap gap-8 justify-center pb-8">
             {graphs.map((el, id) => {
               return (
-                <div key={'graph-' + id} className="w-fit sm:w-full rounded-3xl bg-blue-300/10 overflow-y-hidden" >
+                <div key={'graph-' + id} className="w-fit sm:w-full rounded-3xl bg-blue-300/10 overflow-y-hidden max-sm:mx-2 " >
                   <LineChart
                     outerSection={visualisationSectionRef}
                     caption={el.caption}

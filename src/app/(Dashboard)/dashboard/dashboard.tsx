@@ -46,7 +46,7 @@ export const DashBoardData = () => {
   }, [configs])
 
   return (
-    <div className='max-sm:pl-2'>
+    <div className='max-sm:px-2'>
       <h2 className="mb-8 text-2xl">
         <strong>
           Number of runs per configuration

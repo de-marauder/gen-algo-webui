@@ -20,11 +20,11 @@ export const SignOut = () => {
 
     // // console.log(cookie)
     // const response = 
+    window.localStorage.removeItem('site-user');
+    cookie.remove('jwt-token');
     axios.delete<{ data: TypeUser }>(url, APIConfig)
       .then((response) => {
         // console.log(response)
-        window.localStorage.removeItem('site-user');
-        cookie.remove('jwt-token');
         updateUser(null)
         router.push('/')
       }).catch((error) => {

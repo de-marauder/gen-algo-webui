@@ -37,7 +37,7 @@ const Component: React.FC<{ children: React.ReactNode }> = function ({ children 
         <Header />
         <main className=''>
           <div className="min-h-[80vh]">
-            <div className='flex flex-col items-center justify-between'>
+            <div className='flex flex-col items-center justify-between w-fit overflow-x-visible'>
               <Blur />
             </div>
             {children}

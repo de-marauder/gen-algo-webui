@@ -46,7 +46,7 @@ const Page = () => {
         router.push(redirectRoute)
       }).catch((error) => {
         // console.log(error)
-        if (error instanceof AxiosError) setResponseError(error.response?.data.message || 'Error creating user.')
+        if (error instanceof AxiosError) setResponseError(error.response?.data.message || 'Error logging in user.')
         else setResponseError((error as Error).message)
       });
   }

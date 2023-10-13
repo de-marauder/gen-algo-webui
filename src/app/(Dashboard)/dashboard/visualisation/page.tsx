@@ -49,7 +49,7 @@ const Visualizations = () => {
           <section id='graphs' className="max-sm:w-full overflow-x-scroll h-[80vh] overflow-scroll flex flex-wrap gap-8 justify-center pb-8">
             {graphs.map((el, id) => {
               return (
-                <div key={'graph-' + id} className="w-fit sm:w-full rounded-3xl bg-blue-300/10 overflow-y-hidden max-sm:mx-2 " >
+                <div key={'graph-' + id} className="w-fit rounded-3xl bg-blue-300/10 overflow-y-hidden max-sm:mx-2 " >
                   <LineChart
                     outerSection={visualisationSectionRef}
                     caption={el.caption}

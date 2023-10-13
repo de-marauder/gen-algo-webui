@@ -252,8 +252,8 @@ export const LineChart: React.FC<{
 
   return (
     <>
-      <div className='max-sm:w-fit relative p-4 pl-8 hover:bg-grey-100'>
-        <div className='relative max-sm:w-fit ring-4 ring-inset ring-gray-700 rounded-xl'>
+      <div className='w-fit relative p-4 pl-8 hover:bg-grey-100'>
+        <div className='relative w-fit ring-4 ring-inset ring-gray-700 rounded-xl'>
           <p className='absolute w-full text-center rotate-[-90deg] translate-x-[-52%] translate-y-[-100%] bottom-[40%]'>{yLabel}</p>
           {(loading && !reload) && <Loading />}
           {error && (

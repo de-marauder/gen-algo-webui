@@ -34,7 +34,10 @@ export const LineChart: React.FC<{
     console.log(reload)
     setReload(false)
     setError('')
-    if (!configId || configId.length !== 24) return setError('No Config selected')
+    if (!configId || configId.length !== 24) {
+        setLoading(false)
+      return setError('No Config selected')
+      }
     const url = `${process.env.NEXT_PUBLIC_API_URL}/runs?configId=${configId}`;
     // console.log('graph useEffect running')
     fetchData(url, item)

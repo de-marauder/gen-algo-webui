@@ -78,17 +78,17 @@ export const ViewAllRuns = () => {
   return (
     <>
       <div className="max-sm:w-full]">
-        <div className='mb-8 w-full'>
-          <h3 className='max-sm:p-2 text-2xl max-sm:text-lg sm:font-bold mb-4'>Filter By Configuration</h3>
+        <div className='mb-8 w-full max-sm:px-2'>
+          <h3 className='max-sm:py-2 text-2xl max-sm:text-lg sm:font-bold mb-4'>Filter By Configuration</h3>
           <SelectConfig
             trigger={getRuns}
             configs={configs}
             setConfigId={setConfigId}
             setConfigs={setConfigs} />
         </div>
-        <div className="mx-auto lg:max-w-full overflow-x-scroll lg:overflow-auto min-h-[60vh] rounded-xl border border-blue-800/20 grid">
+        <div className="mx-auto max-sm:px-2 lg:max-w-full overflow-x-scroll lg:overflow-auto min-h-[60vh] rounded-xl border border-blue-800/20 grid">
           <div className="bg-blue-800/10 w-full">
-            <h1 className="p-2 sm:pt-8 sm:px-8 font-bold sm:text-3xl mb-4">Average results</h1>
+            <h1 className="max-sm:px-4 p-2 sm:pt-8 sm:px-8 font-bold sm:text-3xl mb-4">Average results</h1>
             <div className="grid grid-cols-3 mb-4 bg-blue-800/20">
               {averages && Object.entries(averages).map(([key, val]) => {
                 return (

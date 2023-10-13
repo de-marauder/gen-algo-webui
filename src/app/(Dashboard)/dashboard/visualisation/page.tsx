@@ -39,8 +39,8 @@ const Visualizations = () => {
           <h1 className="text-4xl max-sm:text-2xl max-sm:pl-2 mb-8 sm:text-center">
             <strong>Graph Visualizations</strong>
           </h1>
-          <div className='mb-8'>
-            <h3 className='max-sm:p-2 text-2xl max-sm:text-lg sm:font-bold mb-4'>Filter By Configuration</h3>
+          <div className='mb-8 max-sm:px-2'>
+            <h3 className='max-sm:py-2 text-2xl max-sm:text-lg sm:font-bold mb-4'>Filter By Configuration</h3>
             <SelectConfig
               configs={configs}
               setConfigId={setConfigId}

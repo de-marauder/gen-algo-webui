@@ -31,7 +31,7 @@ export const LineChart: React.FC<{
     setReload(true)
   }
   useEffect(() => {
-    // console.log(reload)
+    console.log(reload)
     setReload(false)
     setError('')
     if (!configId || configId.length !== 24) return setError('No Config selected')

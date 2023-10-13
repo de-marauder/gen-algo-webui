@@ -10,7 +10,7 @@ const Page = () => {
       <SubNav nav={runNav} />
       <MainContainer>
         <section id='create-runs-section'>
-          <h1 className='font-bold text-xl sm:text-3xl my-4 sm:mb-8 text-center'>Algorithm Runs</h1>
+          <h1 className='font-bold text-xl sm:text-3xl my-4 sm:mb-8 sm:text-center'>Algorithm Runs</h1>
           <ViewAllRuns />
         </section>
       </MainContainer>

@@ -79,7 +79,7 @@ export const ViewAllRuns = () => {
     <>
       <div className="max-sm:w-full]">
         <div className='mb-8 w-full'>
-          <h3 className='max-sm:p-2 text-2xl max-sm:text-xl font-bold mb-4'>Filter By Configuration</h3>
+          <h3 className='max-sm:p-2 text-2xl max-sm:text-lg sm:font-bold mb-4'>Filter By Configuration</h3>
           <SelectConfig
             trigger={getRuns}
             configs={configs}

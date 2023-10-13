@@ -10,7 +10,7 @@ export const showOnSmall = 'sm:hidden max-sm:px-2 text-2xl'
 export const hideOnSmall = 'max-sm:hidden'
 export const Sidebar = () => {
   const pathName = usePathname();
-  const activeTabColor = 'blue'
+  const activeTabColor = '#1e40af'
   const classes = 'h-fit px-4 py-2 cursor-pointer bg-transparent rounded-xl hover:bg-blue-600/20'
   return (
     <aside className="h-full bg-slate-900 w-fit z-[100] fixed">

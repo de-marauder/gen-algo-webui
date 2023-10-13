@@ -93,7 +93,7 @@ export const SelectConfig = ({ trigger, configs, setConfigs, setConfigId }: {
   }, [setConfigs])
 
   return (
-    <div className="w-full max-sm:p-2">
+    <div className="w-full max-sm:py-2">
       <select className="text-black p-2 w-full rounded hover:bg-slate-300" placeholder="Select a configuration" name="configurations" id="configurations" onChange={(e) => {
         // console.log('config name: ', e.target.value)
         setConfigId(e.target.value)

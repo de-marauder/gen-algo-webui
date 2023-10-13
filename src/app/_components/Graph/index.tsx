@@ -260,7 +260,7 @@ export const LineChart: React.FC<{
             <div className='p-4 grid place-items-center rounded-xl absolute top-0 left-0 bottom-0 right-0 bg-blue-800/10 backdrop-blur-3xl'>
               <center>
                 <p className='text-red'>{error}</p>
-                <Button type='sm' onClick={doReload}>Retry</Button>
+                <Button type='lg' styles='px-8 text-xl' onClick={doReload}>Retry</Button>
               </center>
             </div>
           )}

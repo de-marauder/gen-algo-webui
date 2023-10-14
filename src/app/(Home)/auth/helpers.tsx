@@ -19,49 +19,51 @@ export const Input = <T extends object>({ label, value, onChange, error, setErro
         <label className="max-sm:w-fit max-sm:p-1 w-[250px] p-2 font-bold border" htmlFor="">{toTitleCase(label)}</label>
         <input className=" max-sm:py-2 pl-2 w-full bg-blue-800/50 text-white border"
           placeholder={`Enter ${toTitleCase(label)}`}
-          type={(label === 'password' || label === 'confirmPassword') ? 'password' : "text"} name={label} value={value} onChange={(e) => {
-            const newVal = e.target.value;
-            switch (label) {
-              case 'email':
-                setError((prevError) => {
+          type={(label === 'password' || label === 'confirmPassword') ? 'password'
+            : (label === 'email') ? 'email'
+              : "text"} name={label} value={value} onChange={(e) => {
+                const newVal = e.target.value;
+                switch (label) {
+                  case 'email':
+                    setError((prevError) => {
+                      return {
+                        ...prevError,
+                        [label]: !emailRegex.test(newVal) ? 'Invalid email format' : ''
+                      }
+                    })
+                    break
+                  case 'password':
+                    setError((prevError) => {
+                      return {
+                        ...prevError,
+                        [label]: !passwordRegex.test(newVal) ? 'Invalid password format. Must be alphanumeric with at least one symbol.' : ''
+                      }
+                    })
+                    break
+                  case 'confirmPassword':
+                    setError((prevError) => {
+                      return {
+                        ...prevError,
+                        [label]: !passwordRegex.test(newVal) ? 'Invalid password format. Must be alphanumeric with at least one symbol.' : ''
+                      }
+                    })
+                    break
+                  default:
+                    setError((prevError) => {
+                      return {
+                        ...prevError,
+                        [label]: !newVal ? 'Invalid entry. Field cannot be empty' : ''
+                      }
+                    })
+                    break
+                }
+                onChange((prevState) => {
                   return {
-                    ...prevError,
-                    [label]: !emailRegex.test(newVal) ? 'Invalid email format' : ''
+                    ...prevState,
+                    [label]: e.target.value
                   }
                 })
-                break
-              case 'password':
-                setError((prevError) => {
-                  return {
-                    ...prevError,
-                    [label]: !passwordRegex.test(newVal) ? 'Invalid password format. Must be alphanumeric with at least one symbol.' : ''
-                  }
-                })
-                break
-              case 'confirmPassword':
-                setError((prevError) => {
-                  return {
-                    ...prevError,
-                    [label]: !passwordRegex.test(newVal) ? 'Invalid password format. Must be alphanumeric with at least one symbol.' : ''
-                  }
-                })
-                break
-              default:
-                setError((prevError) => {
-                  return {
-                    ...prevError,
-                    [label]: !newVal ? 'Invalid entry. Field cannot be empty' : ''
-                  }
-                })
-                break
-            }
-            onChange((prevState) => {
-              return {
-                ...prevState,
-                [label]: e.target.value
-              }
-            })
-          }} />
+              }} />
 
       </div>
     </>

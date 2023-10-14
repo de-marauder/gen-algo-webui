@@ -16,21 +16,22 @@ export const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
   }
   useEffect(() => {
     // check if token still exist (not logged out)
-    const user = window.localStorage.getItem('site-user');
-    if (!user) {
+    const u = window.localStorage.getItem('site-user');
+    console.log('use effect running: ', u)
+    if (!u) {
       if (pathname !== '/auth/login' && pathname !== '/auth/signup') {
         router.push('/')
       }
     } else {
-      setUser(JSON.parse(user) as TypeUser);
-      // fire alert
-      const popUp = setTimeout(() => {
+      setUser(JSON.parse(u) as TypeUser);
+      // // fire alert
+      // const popUp = setTimeout(() => {
 
-      }, 3000)
+      // }, 3000)
 
-      return () => {
-        clearTimeout(popUp)
-      }
+      // return () => {
+      //   clearTimeout(popUp)
+      // }
     }
   }, [router, pathname])
 

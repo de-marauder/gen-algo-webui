@@ -3,5 +3,6 @@ export type TypeUser = {
   username: string;
   email: string;
   password?: string;
-  token?: string
+  token?: string;
+  fcmToken?: string
 }

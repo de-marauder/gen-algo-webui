@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "node swBuild.js && next dev",
+    "build": "node swBuild.js && next build",
+    "start": "node swBuild.js && next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -15,8 +15,10 @@
     "autoprefixer": "10.4.15",
     "axios": "^1.5.0",
     "d3": "^7.8.5",
+    "dotenv": "^16.3.1",
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
+    "firebase": "^10.5.0",
     "next": "13.4.19",
     "postcss": "8.4.29",
     "randomatic": "^3.1.1",

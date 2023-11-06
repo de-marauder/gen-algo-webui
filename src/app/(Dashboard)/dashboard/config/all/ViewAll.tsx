@@ -13,7 +13,7 @@ export const ViewAll = () => {
   const [error, setError] = useState<string>('')
 
   useEffect(() => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/config/all`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/configs`;
     
     setLoading(true)
     axios.get<{ status: string; data: TypeConfig[] }>(url, APIConfig)

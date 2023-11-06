@@ -6,7 +6,7 @@ const ErrorPage: React.FC<{ error: any; reset: any }> = ({ error, reset }) => {
   // console.log(error, reset)
   return (
     <>
-      {error && <Modal toggle={() => { error = !error }} isError={true} message="Something bad happended"></Modal>}
+      {error && <Modal toggle={() => { reset()}} isError={true} message="Something bad happended"></Modal>}
     </>
   )
 }

@@ -15,7 +15,7 @@ export const DashBoardData = () => {
   const [configs, setConfigs] = useState<TypeConfig[]>([])
   const [data, setData] = useState<[string, number][]>([])
   const [loading, setLoading] = useState<boolean>(true);
-  const allConfigsUrl = `${process.env.NEXT_PUBLIC_API_URL}/config/all`
+  const allConfigsUrl = `${process.env.NEXT_PUBLIC_API_URL}/configs`
 
   useEffect(() => {
     axios.get<{ data: TypeConfig[] }>(allConfigsUrl, APIConfig)

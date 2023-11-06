@@ -12,10 +12,9 @@ import { useRouter } from "next/navigation";
 
 
 export const CreateRun = () => {
-  const router = useRouter()
   const [configs, setConfigs] = useState<(TypeConfig | never)[]>([]);
   const [configId, setConfigId] = useState<string>('');
-  const [_, setRun] = useState<TypeRun[] | []>([]);
+  const [runRes, setRun] = useState<TypeRun[] | null>(null);
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -30,8 +29,8 @@ export const CreateRun = () => {
       .then((response) => {
         // console.log('runs made => ', response)
         setLoading(false)
-        setRun(response.data.data)
-        router.push(`/dashboard/runs/${response.data.data._id}`)
+        setRun(response.data)
+        // router.push(`/dashboard/runs/${response.data.data._id}`)
       }).catch((error) => {
         // console.log('runs made error => ', error)
         setLoading(false)
@@ -47,6 +46,11 @@ export const CreateRun = () => {
           <Modal noCloseButton toggle={() => { }}>
             <Loading />
           </Modal>
+        )
+      }
+      {
+        runRes && (
+          <Modal message={"Your run is on-going. You'll receive a notification once it's done"} toggle={() => { setRun(null) }} />
         )
       }
       {
@@ -77,7 +81,7 @@ export const SelectConfig = ({ trigger, configs, setConfigs, setConfigId }: {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   useEffect(() => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/config/all`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/configs`;
     setLoading(true)
     setError('')
     axios.get<{ data: TypeConfig[] }>(url, APIConfig)
@@ -93,28 +97,26 @@ export const SelectConfig = ({ trigger, configs, setConfigs, setConfigId }: {
   }, [setConfigs])
 
   return (
-    <div className="w-full max-sm:py-2">
-      <select className="text-black p-2 w-full rounded hover:bg-slate-300" placeholder="Select a configuration" name="configurations" id="configurations" onChange={(e) => {
-        // console.log('config name: ', e.target.value)
-        setConfigId(e.target.value)
-        if (trigger) trigger(e.target.value)
-      }}>
-        {loading ? <Loading />
-          : (<option value=''
-          >{error || 'Select Config'}</option>
-          )}
-        {
-          configs ?
-            configs.map((config) => {
-              return (
-                <option key={config._id}
-                  value={config._id}
-                >{config.name}</option>
-              )
-            })
-            : <p>No Configurations</p>
-        }
-      </select>
+    <div className="w-full max-sm:py-2 flex gap-4">
+      {loading ? <Loading type={'xs'} /> :
+        <select className="text-black p-2 w-full rounded hover:bg-slate-300" placeholder="Select a configuration" name="configurations" id="configurations" onChange={(e) => {
+          // console.log('config name: ', e.target.value)
+          setConfigId(e.target.value)
+          if (trigger) trigger(e.target.value)
+        }}>
+          <option>Select config</option>
+          {
+            configs ?
+              configs.map((config) => {
+                return (
+                  <option key={config._id}
+                    value={config._id}
+                  >{config.name}</option>
+                )
+              })
+              : <p>No Configurations</p>
+          }
+        </select>}
     </div>
   )
 }

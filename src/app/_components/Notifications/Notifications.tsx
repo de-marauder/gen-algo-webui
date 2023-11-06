@@ -9,7 +9,7 @@ import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react
 import { Modal } from '../Modals/Modal'
 import ContextStore from '../store/context'
 import { Toggle } from '../utils/Toggle'
-import { doNotification } from '@/services/notificationSetup'
+import { doNotification } from '@/app/_services/notificationSetup'
 import { Button } from '../Buttons/Buttons'
 import Link from 'next/link'
 

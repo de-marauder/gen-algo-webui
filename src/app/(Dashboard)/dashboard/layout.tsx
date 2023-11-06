@@ -3,7 +3,12 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { AuthGuard } from '../../_components/Auth/AuthGuard'
 import { Component } from '@/app/_components/DashboardLayout/Layout'
+import dynamic from 'next/dynamic'
 
+// const DynamicComponentWithNoSSR = dynamic(
+//   () => import('@/app/_services/notificationSetup'),
+//   { ssr: false }
+// )
 
 const inter = Inter({ subsets: ['latin'] })
 

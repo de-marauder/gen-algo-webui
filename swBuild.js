@@ -2,8 +2,16 @@ require('dotenv').config({
   path: './.env.local'
 }); // make sure you have '.env' file in pwd
 const fs = require('fs');
+const path = require('path');
 
-fs.writeFileSync('./dist/swenv.js',
+const directoryPath = './dist';
+const fileName = 'swenv.js';
+
+// Check if the directory exists, and create it if it doesn't
+if (!fs.existsSync(directoryPath)) {
+  fs.mkdirSync(directoryPath, { recursive: true });
+}
+fs.writeFileSync(path.join(directoryPath, fileName),
   `
 const process = {
   env: {

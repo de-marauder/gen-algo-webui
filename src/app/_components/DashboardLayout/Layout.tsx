@@ -1,14 +1,15 @@
 'use client'
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import ContextStore from '@/app/_components/store/context'
 import Loading from '@/app/(Home)/loading'
 import { Sidebar } from '../../_components/Nav/Sidebar'
 import { TopBar } from '../../_components/Nav/TopBar'
 import { Blur } from '../../_components/utils/Blur'
+import { Notifications } from '../Notifications/Notifications';
 
 export const Component: React.FC<{ children: React.ReactNode }> = function ({ children }) {
-  const { user } = useContext(ContextStore)
-  // console.log('component mounting: ', user)
+  const { user,  notifications } = useContext(ContextStore)
+
   return (
     <>
       {user ?
@@ -24,6 +25,7 @@ export const Component: React.FC<{ children: React.ReactNode }> = function ({ ch
                 {children}
               </div>
             </div>
+            {notifications ? <Notifications /> : null}
           </main>
         </> : <Loading />
       }

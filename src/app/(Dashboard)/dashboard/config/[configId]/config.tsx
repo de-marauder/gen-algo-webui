@@ -11,7 +11,7 @@ export const Config = ({ configId }: { configId: string }) => {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/config/${configId}`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/configs/${configId}`;
 
     axios.get<{ status: string; data: TypeConfig }>(url, APIConfig)
       .then((response) => {

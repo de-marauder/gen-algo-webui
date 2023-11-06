@@ -14,6 +14,10 @@ export const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
   const updateUser = (user: TypeUser | null) => {
     setUser(user)
   }
+  const [notifications, setNotification] = useState(false)
+  const updateNotification = (show: boolean) => {
+    setNotification(show)
+  }
   useEffect(() => {
     // check if token still exist (not logged out)
     const u = window.localStorage.getItem('site-user');
@@ -37,7 +41,7 @@ export const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <>
-      <ContextStore.Provider value={{ user, updateUser }}>
+      <ContextStore.Provider value={{ user, updateUser, notifications, updateNotification }}>
         {/* Render the children and pass the user data as a prop */}
         {children}
       </ContextStore.Provider>

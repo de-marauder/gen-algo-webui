@@ -74,7 +74,7 @@ export const ConfigCard = ({ config }: { config: Omit<TypeConfig, 'userid'> }) =
   const [configId] = useState(config._id);
 
   const deleteConfig = (configId: string) => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/config/${configId}`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/configs/${configId}`;
     // console.log('configId: ', configId)
     // console.log('url: ', url)
     setError('');

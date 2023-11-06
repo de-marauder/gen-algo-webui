@@ -3,7 +3,7 @@ require('dotenv').config({
 }); // make sure you have '.env' file in pwd
 const fs = require('fs');
 
-fs.writeFileSync('./public/swenv.js',
+fs.writeFileSync('./dist/swenv.js',
   `
 const process = {
   env: {

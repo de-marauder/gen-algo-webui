@@ -4,7 +4,7 @@ require('dotenv').config({
 const fs = require('fs');
 const path = require('path');
 
-const directoryPath = './.next';
+const directoryPath = './public';
 const fileName = 'swenv.js';
 
 // Check if the directory exists, and create it if it doesn't

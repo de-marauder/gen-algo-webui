@@ -33,7 +33,7 @@ export const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     (async()=>{
       updateSWR(await navigator.serviceWorker.register('/firebase-messaging-sw.js'))
-    })
+    })();
   }, []);
   useEffect(() => {
     updateNotifCounter(+(window.localStorage.getItem('notif-counter') || 0))

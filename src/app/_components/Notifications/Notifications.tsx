@@ -128,7 +128,7 @@ export const SubscribeNotification = () => {
   useEffect(() => {
     const u = JSON.parse(localStorage.getItem('site-user') || '')
     setIsSubscribed(!!u?.fcmToken);
-  }, []);
+  }, [swr, user]);
 
   const subscribeAction = async () => {
     // const u = JSON.parse(localStorage.getItem('site-user') || '')

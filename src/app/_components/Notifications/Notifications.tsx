@@ -121,7 +121,7 @@ const Notification = ({ _id, link, date, message, notes, setNotes }: {
 
 export const SubscribeNotification = () => {
   const fcmToken = localStorage.getItem('fcmToken') || ''
-  const { user, updateUser } = useContext(ContextStore)
+  const { swr, user, updateUser } = useContext(ContextStore)
   const [isSubscribed, setIsSubscribed] = useState(!!user?.fcmToken);
   const [error, setError] = useState('')
 
@@ -133,8 +133,8 @@ export const SubscribeNotification = () => {
   const subscribeAction = async () => {
     // const u = JSON.parse(localStorage.getItem('site-user') || '')
     // updateUser(u)
-    if (user) {
-      doNotification().then(async () => {
+    if (user && swr) {
+      doNotification(swr).then(async () => {
 
         const url = isSubscribed ?
           `${process.env.NEXT_PUBLIC_API_URL}/notifications/unsubscribe`

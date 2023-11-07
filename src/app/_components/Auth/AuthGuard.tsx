@@ -25,7 +25,16 @@ export const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
     setNotifCounter(count)
     window.localStorage?.setItem('notif-counter', count.toString())
   }
+  const [swr,  setSWR] = useState<ServiceWorkerRegistration | null>(null);
+  const updateSWR = (swr: ServiceWorkerRegistration) => {
+    setSWR(swr)
+  }
 
+  useEffect(() => {
+    (async()=>{
+      updateSWR(await navigator.serviceWorker.register('/firebase-messaging-sw.js'))
+    })
+  }, []);
   useEffect(() => {
     updateNotifCounter(+(window.localStorage.getItem('notif-counter') || 0))
   }, []);
@@ -33,7 +42,6 @@ export const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     // check if token still exist (not logged out)
     const u = window.localStorage.getItem('site-user');
-    console.log('use effect running: ', u)
     if (!u) {
       if (pathname !== '/auth/login' && pathname !== '/auth/signup') {
         router.push('/')
@@ -46,7 +54,7 @@ export const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <>
-      <ContextStore.Provider value={{ user, updateUser, notifications, updateNotification, notifCounter, updateNotifCounter }}>
+      <ContextStore.Provider value={{ user, updateUser, notifications, updateNotification, notifCounter, updateNotifCounter, swr, updateSWR }}>
         {children}
       </ContextStore.Provider>
     </>

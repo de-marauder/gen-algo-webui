@@ -29,8 +29,6 @@ axios.get(`${process.env.NEXT_PUBLIC_API_URL}/notifications`, APIConfig)
 
 // Initialize Firebase
 export var messaging: Messaging | undefined
-var navigator: any = undefined;
-export const swRegistration = navigator?.serviceWorker.register('/firebase-messaging-sw.js');
 
 if (global?.window && 'navigator' in window) {
   var app = initializeApp(firebaseConfig);
@@ -39,7 +37,7 @@ if (global?.window && 'navigator' in window) {
 
 }
 
-export async function doNotification(notif?: { title: string, notification: NotificationOptions }) {
+export async function doNotification(swr: ServiceWorkerRegistration, notif?: { title: string, notification: NotificationOptions }) {
   if (global?.window && 'navigator' in window) {
     if (!("Notification" in window)) {
       // Check if the browser supports notifications
@@ -50,19 +48,19 @@ export async function doNotification(notif?: { title: string, notification: Noti
       const u = JSON.parse(localStorage.getItem('site-user') || '') as TypeUser | ''
       if (u && u.fcmToken && localStorage.getItem('fcmToken')) {
         // const notification = new Notification(notif?.title || "Permission Granted", notif?.notification || { body: 'You now have permissions' })
-        (await swRegistration).showNotification(notif?.title || "Permission Granted", notif?.notification || { body: 'You now have permissions' });
+        swr.showNotification(notif?.title || "Permission Granted", notif?.notification || { body: 'You now have permissions' });
       } else {
-        return await requestPermission(notif)
+        return await requestPermission(swr, notif)
       }
     } else if (Notification.permission !== "denied") {
       // We need to ask the user for permission
-      return await requestPermission(notif)
+      return await requestPermission(swr, notif)
     }
 
   }
 }
 
-export async function requestPermission(notif?: { title: string, notification: NotificationOptions }) {
+export async function requestPermission(swr: ServiceWorkerRegistration, notif?: { title: string, notification: NotificationOptions }) {
   if (global?.window && 'navigator' in window) {
     const permission = await Notification.requestPermission()
 
@@ -71,7 +69,7 @@ export async function requestPermission(notif?: { title: string, notification: N
       if (messaging) {
 
         const fcmToken = await getToken(messaging, {
-          serviceWorkerRegistration: await swRegistration,
+          serviceWorkerRegistration: swr,
           vapidKey: process.env.NEXT_PUBLIC_FCM_VAPID_KEY
         }).catch((err) => {
           console.log(err)
@@ -88,7 +86,7 @@ export async function requestPermission(notif?: { title: string, notification: N
             localStorage.setItem('site-user', JSON.stringify(u));
 
             // const notification = new Notification(notif?.title || "Permission Granted", notif?.notification || { body: 'You now have permissions' })
-            (await swRegistration).showNotification(notif?.title || "Permission Granted", notif?.notification || { body: 'You now have permissions' });
+            swr.showNotification(notif?.title || "Permission Granted", notif?.notification || { body: 'You now have permissions' });
           }
         } else {
           // Show permission request UI

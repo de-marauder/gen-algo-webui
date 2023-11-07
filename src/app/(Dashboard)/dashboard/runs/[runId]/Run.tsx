@@ -69,6 +69,8 @@ export const Run: React.FC<{ runId: string }> = ({ runId }) => {
   delete (run as { createdAt?: string })?.createdAt
   delete (run as { __v?: string })?.__v
 
+  const url = `/dashboard/config/${(run?.config as unknown as { _id: string })?._id.toString()}`;
+
   return (
     <section id='run-section' className='max-sm:p-2'>
       {showDeleteModal && (
@@ -98,7 +100,7 @@ export const Run: React.FC<{ runId: string }> = ({ runId }) => {
               <div className='flex max-sm:flex-col-reverse max-sm:gap-2 max-sm:items-end justify-between items-center gap-4'>
                 <Link
                   className='font-bold p-2 my-2 rounded ring-2 ring-offset-2 active:scale-[97%] bg-blue-800  hover:bg-white hover:text-blue-800'
-                  href={`/dashboard/config/` + run.config}>
+                  href={url}>
                   View Config
                 </Link>
                 <Button styles="bg-red-500 hover:bg-red-800/50 max-sm:mx-0" type="sm" onClick={() => { setShowDeleteModal(true) }}>Delete</Button>

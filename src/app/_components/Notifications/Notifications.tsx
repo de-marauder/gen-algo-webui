@@ -71,7 +71,8 @@ const Notification = ({ _id, link, date, message, notes, setNotes }: {
   _id: string; link: string; message: string; date: string, notes: NotesType[], setNotes: Dispatch<SetStateAction<NotesType[]>>
 }) => {
   const [loading, setloading] = useState(false);
-  const [error, setError] = useState('')
+  const [error, setError] = useState('');
+  const {updateNotifCounter} = useContext(ContextStore)
 
   const deleteNote = async (noteId: string) => {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/notifications/${noteId}`;
@@ -81,14 +82,16 @@ const Notification = ({ _id, link, date, message, notes, setNotes }: {
         // console.log(response)
         const n = notes.filter((note) => note._id !== _id)
         setNotes(n)
+        updateNotifCounter(n.length)
       }).catch((error) => {
         setloading(false)
         // console.log(error)
         setError(error.message)
       })
   }
-  const splitLink = link.split('/').slice(4);
-  const url = splitLink.join('/');
+  const splitLink = link.split('/').slice(3);
+  const url = '/' + splitLink.join('/');
+
   return (
     <>
       {error && <Modal isError message={error} toggle={() => setError('')} />}

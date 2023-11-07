@@ -12,7 +12,7 @@ import { SubscribeNotification } from "../Notifications/Notifications";
 
 
 export const TopBar = () => {
-  const { user, updateNotification } = useContext(ContextStore);
+  const { user } = useContext(ContextStore);
   const [showUserOptions, setShowUserOptions] = useState(false);
   const pathName = usePathname();
   const activeTabColor = 'blue'
@@ -37,12 +37,8 @@ export const TopBar = () => {
             </ul>
           ) : (
             <div className='flex gap-4 items-center'>
-              <div className="hover:bg-blue-500/20 rounded-3xl p-2" onClick={() => updateNotification(true)}>
-                <BsBell className='text-2xl font-bold' />
-              </div>
-              <div
-                className="relative"
-              >
+              <NotifBell />
+              <div className="relative" >
                 <p
                   onClick={() => setShowUserOptions(!showUserOptions)}
                   className="cursor-default hover:bg-blue-500/20 h-fit py-2 px-4 border rounded rounded-3xl">{user.username}</p>
@@ -55,3 +51,16 @@ export const TopBar = () => {
     </>
   )
 };
+
+const NotifBell = () => {
+  const { notifications, updateNotification, notifCounter } = useContext(ContextStore);
+
+  return (
+    <div className="hover:bg-blue-500/20 rounded-3xl p-2 relative" onClick={() => updateNotification(!notifications)}>
+      <BsBell className='text-2xl font-bold' />
+      <p className='text-sm absolute top-[-10px] right-[-10px] px-2 rounded-xl bg-slate-200/50'>
+        {notifCounter}
+      </p>
+    </div>
+  )
+}

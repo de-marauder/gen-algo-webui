@@ -6,9 +6,27 @@ import { Sidebar } from '../../_components/Nav/Sidebar'
 import { TopBar } from '../../_components/Nav/TopBar'
 import { Blur } from '../../_components/utils/Blur'
 import { Notifications } from '../Notifications/Notifications';
+import { onMessage } from 'firebase/messaging';
+import { messaging, swRegistration } from '@/app/_services/notificationSetup';
+import axios from 'axios';
+import { APIConfig } from '@/app/(Dashboard)/dashboard/config/_helper';
 
 export const Component: React.FC<{ children: React.ReactNode }> = function ({ children }) {
-  const { user,  notifications } = useContext(ContextStore)
+  const { user, notifications, updateNotifCounter } = useContext(ContextStore)
+
+  if (messaging) {
+    onMessage(messaging, async (payload) => {
+      // new Notification(payload.notification?.title || 'Message received', payload.notification);
+      (await swRegistration).showNotification(payload.notification?.title || 'Message received', payload.notification);
+      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/notifications`, APIConfig)
+        .then((data: { data: { data: {}[] } }) => {
+          const n = data.data.data.length;
+          updateNotifCounter(n)
+          window.localStorage.setItem('notif-counter', n.toString())
+        })
+
+    });
+  }
 
   return (
     <>

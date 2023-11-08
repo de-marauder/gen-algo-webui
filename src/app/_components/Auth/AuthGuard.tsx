@@ -6,6 +6,8 @@ import { TypeUser } from "@/Types/User";
 
 import React from 'react';
 import ContextStore from "../store/context";
+import axios from "axios";
+import { APIConfig } from "@/app/(Dashboard)/dashboard/config/_helper";
 
 // var window : Window
 
@@ -35,8 +37,15 @@ export const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
       updateSWR(await navigator.serviceWorker.register('/firebase-messaging-sw.js'))
     })();
   }, []);
+  
   useEffect(() => {
-    updateNotifCounter(+(window.localStorage.getItem('notif-counter') || 0))
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/notifications`, APIConfig)
+      .then((data: { data: { data: [] } }) => {
+        const notifCounter = data.data.data.length
+        localStorage.setItem('notif-counter', notifCounter?.toString() || '0')
+        updateNotifCounter(notifCounter)
+      })
+
   }, []);
 
   useEffect(() => {

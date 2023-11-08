@@ -20,13 +20,6 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FCM_APP_ID
 };
 
-let notifCounter = 0;
-axios.get(`${process.env.NEXT_PUBLIC_API_URL}/notifications`, APIConfig)
-  .then((data: { data: { data: [] } }) => {
-    notifCounter = data.data.data.length
-    localStorage.setItem('notif-counter', notifCounter?.toString() || '0')
-  })
-
 // Initialize Firebase
 export var messaging: Messaging | undefined
 

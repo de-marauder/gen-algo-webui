@@ -58,9 +58,12 @@ const NotifBell = () => {
   return (
     <div className="hover:bg-blue-500/20 rounded-3xl p-2 relative" onClick={() => updateNotification(!notifications)}>
       <BsBell className='text-2xl font-bold' />
-      <p className='text-sm absolute top-[-10px] right-[-10px] px-2 rounded-xl bg-slate-200/50'>
-        {notifCounter}
-      </p>
+      {notifCounter > 0 ?
+        <p className='text-sm absolute top-[-10px] right-[-10px] px-2 rounded-xl bg-slate-200/50'>
+          {notifCounter < 100 ? notifCounter : '100+'}
+        </p>
+        : null
+      }
     </div>
   )
 }

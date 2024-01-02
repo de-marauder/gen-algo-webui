@@ -1,34 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Gen Algo WebUI
 
-## Getting Started
+<img src="./assets/images/gen_algo.png" alt="gen-algo" >
 
-First, run the development server:
+A [website](https://gen-algo-webui.vercel.app/) for interacting with a [genetic algorithm](http://github.com/de-marauder/genetics_algorithm) to optimize hydrogen production from flare gases using a Steam Methane Reformer. It makes use of an [API](http://github.com/de-marauder/gen-algo-api) to provide a user friendly interface for users to run the algorithm with mulltiple configurations and study the results using visually pleasing graphs.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## How to use
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Sign up
+First of all, you have to create a user account. We just need a username, email and password. Nothing much. After that, you'll be taken to your dashboard.
+<img src="./assets/images/gen_algo_sign_up.png" alt="sign_up">
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Configurations
+By default you have a config which you can create by navigating to https://gen-algo-webui.vercel.app/dashboard/config (This is of course after you've signed up). All you have to do is name it or not (an arbitrary name will be given if you don't). You can create multiple configurations perhaps depending on different flare samples or algorithm settings to study the behaviour with respect to those changes
+<img src="./assets/images/create_config.png" alt="create-config">
+<br>
+<img src="./assets/images/example_config.png" alt="example-config">
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Runs
+Using a particular configuration, you can make runs multiple times. When a run is done, you'll receive a notification (You need to subscribe to receive notifications first). 
+<img src="./assets/images/create_run.png" alt="create-run">
+You also get a nice table to view all your runs per configuration. A summary of their average values are prepared as well.
+<img src="./assets/images/runs_table.png" alt="runs-table">
 
-## Learn More
+### Visualizations
+You view graphs that map the way the results of the algorithm changes with successive runs. This can help you gain an idea of the algorithms performance and suitability of the results obtained. You can also easily compare them with graphs from the results obtained with other configurations by simply toggling between different configs.
 
-To learn more about Next.js, take a look at the following resources:
+<img src="./assets/images/visualizations.png" alt="visualizations">
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Technologies
+- Website was built with NextJs 13. It makes use of the App Router
+- Notifications are handled with FCM (firebase Cloud Messaging)
+- Graphs are plotted using d3.js

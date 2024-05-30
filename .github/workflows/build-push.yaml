@@ -39,22 +39,22 @@ jobs:
       - name: Write env file
         run: |
           cat <<EOF>.env.local
-          NEXT_PUBLIC_API_URL={{secret.NEXT_PUBLIC_API_URL}}
-          NEXT_PUBLIC_FCM_API_KEY={{secret.NEXT_PUBLIC_FCM_API_KEY}}
-          NEXT_PUBLIC_FCM_AUTH_DOMAIN={{secret.NEXT_PUBLIC_FCM_AUTH_DOMAIN}}
-          NEXT_PUBLIC_FCM_PROJECT_ID={{secret.NEXT_PUBLIC_FCM_PROJECT_ID}}
-          NEXT_PUBLIC_FCM_STRORAGE_BUCKET={{secret.NEXT_PUBLIC_FCM_STRORAGE_BUCKET}}
-          NEXT_PUBLIC_FCM_MESSAGING_SENDER={{secret.NEXT_PUBLIC_FCM_MESSAGING_SENDER}}
-          NEXT_PUBLIC_FCM_APP_ID={{secret.NEXT_PUBLIC_FCM_APP_ID}}
-          NEXT_PUBLIC_FCM_VAPID_KEY={{secret.NEXT_PUBLIC_FCM_VAPID_KEY}}
+          NEXT_PUBLIC_API_URL=${{secret.NEXT_PUBLIC_API_URL}}
+          NEXT_PUBLIC_FCM_API_KEY=${{secret.NEXT_PUBLIC_FCM_API_KEY}}
+          NEXT_PUBLIC_FCM_AUTH_DOMAIN=${{secret.NEXT_PUBLIC_FCM_AUTH_DOMAIN}}
+          NEXT_PUBLIC_FCM_PROJECT_ID=${{secret.NEXT_PUBLIC_FCM_PROJECT_ID}}
+          NEXT_PUBLIC_FCM_STRORAGE_BUCKET=${{secret.NEXT_PUBLIC_FCM_STRORAGE_BUCKET}}
+          NEXT_PUBLIC_FCM_MESSAGING_SENDER=${{secret.NEXT_PUBLIC_FCM_MESSAGING_SENDER}}
+          NEXT_PUBLIC_FCM_APP_ID=${{secret.NEXT_PUBLIC_FCM_APP_ID}}
+          NEXT_PUBLIC_FCM_VAPID_KEY=${{secret.NEXT_PUBLIC_FCM_VAPID_KEY}}
           EOF
 
       - name: Build Docker image
         run: |
-          docker build -t {{ env.PROJECT_NAME }}:${{ env.COMMIT_HASH }}-${{ env.BRANCH_NAME }} .
-          docker tag {{ env.PROJECT_NAME }}:${{ env.COMMIT_HASH }}-${{ env.BRANCH_NAME }} {{ env.PROJECT_NAME }}:latest-${{ env.BRANCH_NAME }}
+          docker build -t ${{ env.PROJECT_NAME }}:${{ env.COMMIT_HASH }}-${{ env.BRANCH_NAME }} .
+          docker tag ${{ env.PROJECT_NAME }}:${{ env.COMMIT_HASH }}-${{ env.BRANCH_NAME }} ${{ env.PROJECT_NAME }}:latest-${{ env.BRANCH_NAME }}
 
       - name: Push Docker image
         run: |
-          docker push {{ env.PROJECT_NAME }}:${{ env.COMMIT_HASH }}-${{ env.BRANCH_NAME }}
-          docker push {{ env.PROJECT_NAME }}:latest-${{ env.BRANCH_NAME }}
+          docker push ${{ env.PROJECT_NAME }}:${{ env.COMMIT_HASH }}-${{ env.BRANCH_NAME }}
+          docker push ${{ env.PROJECT_NAME }}:latest-${{ env.BRANCH_NAME }}

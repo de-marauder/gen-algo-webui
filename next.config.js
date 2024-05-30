@@ -3,7 +3,8 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
-  // distDir: 'dist'
+  output: "standalone",
+  reactStrictMode: true,
 }
 
 module.exports = nextConfig

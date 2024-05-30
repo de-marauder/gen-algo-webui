@@ -1,0 +1,27 @@
+# Ignore node_modules - dependencies will be installed inside the container
+node_modules
+npm-debug.log
+
+# Ignore logs
+logs
+*.log
+
+# Ignore dotenv files - sensitive information
+.env
+.env.local
+
+# Ignore local development files
+.DS_Store
+.vscode
+.idea
+.git
+.github
+
+# Ignore test files and directories
+coverage
+*.spec.js
+*.test.js
+
+# Ignore build output
+build
+dist

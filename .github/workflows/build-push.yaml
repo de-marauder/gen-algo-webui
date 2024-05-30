@@ -51,10 +51,10 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ env.PROJECT_NAME }}:${{ env.COMMIT_HASH }}-${{ env.BRANCH_NAME }} .
-          docker tag ${{ env.PROJECT_NAME }}:${{ env.COMMIT_HASH }}-${{ env.BRANCH_NAME }} ${{ env.PROJECT_NAME }}:latest-${{ env.BRANCH_NAME }}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.PROJECT_NAME }}:${{ env.COMMIT_HASH }}-${{ env.BRANCH_NAME }} .
+          docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.PROJECT_NAME }}:${{ env.COMMIT_HASH }}-${{ env.BRANCH_NAME }} ${{ secrets.DOCKER_USERNAME }}/${{ env.PROJECT_NAME }}:latest-${{ env.BRANCH_NAME }}
 
       - name: Push Docker image
         run: |
-          docker push ${{ env.PROJECT_NAME }}:${{ env.COMMIT_HASH }}-${{ env.BRANCH_NAME }}
-          docker push ${{ env.PROJECT_NAME }}:latest-${{ env.BRANCH_NAME }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.PROJECT_NAME }}:${{ env.COMMIT_HASH }}-${{ env.BRANCH_NAME }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.PROJECT_NAME }}:latest-${{ env.BRANCH_NAME }}

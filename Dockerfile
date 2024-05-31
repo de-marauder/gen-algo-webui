@@ -51,7 +51,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/swBuild.js ./
 # Set the correct permission for prerender cache
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
-RUN chown nextjs:nodejs .
+RUN chown nextjs:nodejs /app
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing

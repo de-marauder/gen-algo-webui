@@ -1,3 +1,4 @@
+import { Generations } from "@/app/(Dashboard)/dashboard/visualisation/_helpers";
 import { TypeConfig } from "./Config";
 
 export type Config = {
@@ -52,6 +53,6 @@ export type AlgoResult = {
   outputCH4: number;
   error: number;
   timeTaken: string;
-}
+} & Generations
 
 export type Stop = 'convergence' | 'isFit' | 'maxGen';

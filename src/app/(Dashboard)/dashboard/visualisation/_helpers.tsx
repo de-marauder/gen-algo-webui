@@ -1,6 +1,18 @@
 import { TypeRun } from "@/Types/Run"
 
-type DataPoint = readonly [number, number]
+export type Generations = {
+  generations: {
+    error: number,
+    hydrogen: number,
+    methane: number,
+    CO: number,
+    CO2: number,
+    id: number,
+  }[];
+}
+export type DataPoint = {
+  x: number; y: number
+} & Generations
 export type DataPoints = DataPoint[]
 export type GraphItems = Pick<
   TypeRun,
@@ -12,7 +24,7 @@ export type GraphItems = Pick<
   'pressure' |
   'temperature' |
   'steamToCarbonRatio'
->
+> & Generations
 export type GraphItemsKeys = keyof GraphItems
 
 export type GraphData = {
@@ -24,7 +36,7 @@ export type GraphData = {
 
 export const graphs: GraphData[] = [
   {
-    caption: 'Amt. of H2 vs No. of Runs',
+    caption: 'Amt. of Hydrogen vs No. of Runs',
     xLabel: 'No. of Runs',
     yLabel: 'Amt. of H2 (kmol)',
     item: 'outputH2'
@@ -36,7 +48,7 @@ export const graphs: GraphData[] = [
     item: 'outputCO2'
   },
   {
-    caption: 'Amt. of CH4 vs No. of Runs',
+    caption: 'Amt. of Methane vs No. of Runs',
     xLabel: 'No. of Runs',
     yLabel: 'Amt. of CH4 (kmol)',
     item: 'outputCH4'
@@ -48,27 +60,27 @@ export const graphs: GraphData[] = [
     item: 'outputCO'
   },
   {
-    caption: 'Amt. of H2O vs No. of Runs',
+    caption: 'Amt. of Water vs No. of Runs',
     xLabel: 'No. of Runs',
     yLabel: 'Amt. of H2O (kmol)',
     item: 'outputH2O'
   },
   {
-    caption: 'Amt. of P vs No. of Runs',
+    caption: 'Pressure vs No. of Runs',
     xLabel: 'No. of Runs',
-    yLabel: 'Amt. of pressure (bar)',
+    yLabel: 'Pressure (bar)',
     item: 'pressure'
   },
   {
-    caption: 'temperature vs No. of Runs',
+    caption: 'Temperature vs No. of Runs',
     xLabel: 'No. of Runs',
-    yLabel: 'Amt. of T (K)',
+    yLabel: 'Temperature (K)',
     item: 'temperature'
   },
   {
     caption: 'S/C vs No. of Runs',
     xLabel: 'No. of Runs',
-    yLabel: 'Amt. of S/C',
+    yLabel: 'Steam-to-carbon ratio [S/C] (kmol/kmol)',
     item: 'steamToCarbonRatio'
   },
 ]

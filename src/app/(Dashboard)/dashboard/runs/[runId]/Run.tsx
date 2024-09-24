@@ -11,6 +11,7 @@ import { APIConfig } from '../../config/_helper';
 import { toTitleCase } from '@/app/(Home)/auth/helpers';
 import { Button } from '@/app/_components/Buttons/Buttons';
 import { useRouter } from 'next/navigation';
+import { Generations } from '../../visualisation/_helpers';
 
 export const Run: React.FC<{ runId: string }> = ({ runId }) => {
   const [run, setRun] = useState<TypeRun | null>(null);
@@ -29,12 +30,10 @@ export const Run: React.FC<{ runId: string }> = ({ runId }) => {
     setDeleteLoader(true);
     axios.delete(url, APIConfig)
       .then((response) => {
-        // console.log('deleted: ', response)
         setDeleteLoader(false);
         setShowDeleteModal(false)
         router.push('/dashboard/runs/all')
       }).catch((error) => {
-        // console.log(error)
         setDeleteLoader(false);
         if (error instanceof AxiosError) setError(error.response?.data.message || 'Error making delete request')
         setError(error.response?.data.message || error.message || 'request failed')
@@ -68,6 +67,7 @@ export const Run: React.FC<{ runId: string }> = ({ runId }) => {
   delete (run as { updatedAt?: string })?.updatedAt
   delete (run as { createdAt?: string })?.createdAt
   delete (run as { __v?: string })?.__v
+  delete (run as { generations?: Generations['generations'] })?.generations
 
   const url = `/dashboard/config/${(run?.config as unknown as { _id: string })?._id.toString()}`;
 
@@ -76,7 +76,7 @@ export const Run: React.FC<{ runId: string }> = ({ runId }) => {
       {showDeleteModal && (
         <Modal toggle={() => { }} noCloseButton>
           <div className="grid gap-4">
-            <h3>Are you sure you want to delete this config?</h3>
+            <h3>Are you sure you want to delete this run?</h3>
             <div className="flex gap-4 justify-between">
               <Button type='sm' styles="bg-slate-300 text-black hover:text-white px-4" onClick={() => { deleteConfig(runId) }}>Yes</Button>
               <Button type="sm" styles='bg-red-500 hover:bg-red-800/50' onClick={() => { setShowDeleteModal(false) }}>Cancel</Button>
@@ -101,7 +101,7 @@ export const Run: React.FC<{ runId: string }> = ({ runId }) => {
                 <Link
                   className='font-bold p-2 my-2 rounded ring-2 ring-offset-2 active:scale-[97%] bg-blue-800  hover:bg-white hover:text-blue-800'
                   href={url}>
-                  View Config
+                  View config
                 </Link>
                 <Button styles="bg-red-500 hover:bg-red-800/50 max-sm:mx-0" type="sm" onClick={() => { setShowDeleteModal(true) }}>Delete</Button>
               </div>
@@ -111,7 +111,7 @@ export const Run: React.FC<{ runId: string }> = ({ runId }) => {
         <Blur />
         <div className='grid sm:grid-cols-2 gap-4 bg-blue-800/10 backdrop-blur-sm border border-blue-800/20 rounded-3xl p-4'>
           {loading && <Loading />}
-          {run && Object.entries(run).map((el, id) => {
+          {run && Object.entries(run as Omit<TypeRun, 'generations'>).map((el, id) => {
             return (
               <>
                 {

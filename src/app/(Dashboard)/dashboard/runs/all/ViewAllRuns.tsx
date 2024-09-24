@@ -1,16 +1,16 @@
 'use client'
 
 import axios from "axios";
-import { ReactNode, useEffect, useState } from "react"
+import { ReactNode, useContext, useEffect, useState } from "react"
 import { Modal } from "../../../../_components/Modals/Modal";
 import Loading from "../../../../(Home)/loading";
 import Link from "next/link";
-// import { Blur } from "../../../../_components/utils/Blur";
 import { TypeRun } from "@/Types/Run";
 import { APIConfig } from "../../config/_helper";
 import { SelectConfig } from "../CreateRun";
 import { TypeConfig } from "@/Types/Config";
 import { toTitleCase } from "@/app/(Home)/auth/helpers";
+import ContextStore from "@/app/_components/store/context";
 
 
 type FieldsInRunsShown = {
@@ -36,8 +36,7 @@ const defaultAv = {
 }
 
 export const ViewAllRuns = () => {
-  const [configs, setConfigs] = useState<(TypeConfig | never)[]>([]);
-  const [configId, setConfigId] = useState<string>('');
+  const { configId, configs } = useContext(ContextStore)
   const [runs, setRuns] = useState<TypeRun[] | []>([]);
   const [averages, setAverages] = useState<FieldsInRunsShown>(defaultAv);
   const [loading, setLoading] = useState(false)
@@ -54,7 +53,6 @@ export const ViewAllRuns = () => {
         setRuns(r)
         if (r.length > 0) {
           const av = (r as FieldsInRunsShown[]).reduce((prev, curr, id, arr) => {
-            // console.log('averaging => ', id, prev)
             return {
               pressure: prev.pressure + curr.pressure,
               temperature: prev.temperature + curr.temperature,
@@ -75,16 +73,20 @@ export const ViewAllRuns = () => {
       })
   }
 
+  useEffect(() => {
+    if (configId) {
+      getRuns(configId)
+    } else {
+      setRuns([])
+    }
+  }, [])
+
   return (
     <>
       <div className="max-sm:w-full]">
         <div className='mb-8 w-full max-sm:px-2'>
           <h3 className='max-sm:py-2 text-2xl max-sm:text-lg sm:font-bold mb-4'>Filter By Configuration</h3>
-          <SelectConfig
-            trigger={getRuns}
-            configs={configs}
-            setConfigId={setConfigId}
-            setConfigs={setConfigs} />
+          <SelectConfig trigger={getRuns} configs={configs as TypeConfig[]} />
         </div>
         <div className="mx-auto max-sm:px-2 lg:max-w-full overflow-x-scroll lg:overflow-auto min-h-[60vh] rounded-xl border border-blue-800/20 grid">
           <div className="bg-blue-800/10 w-full">

@@ -2,25 +2,47 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import { FlareGasComposition, MbConfig, SmrConfig, StPressure, TraitBoundaries } from './_helpers';
 
 
-export const ConfigNameInput: React.FC<{
+export const Input: React.FC<{
   k: string;
-  v: string;
-  label: string
-  setValue: Dispatch<SetStateAction<string>>;
-}> = ({k, v, label, setValue}) =>{
+  v: string | number;
+  label: string;
+  type: string;
+  placeholder: string;
+  setValue: Dispatch<SetStateAction<any>>;
+}> = ({ k, v, type, label, placeholder, setValue }) => {
   return (
     <div className='flex gap-4 mb-2 max-sm:flex-col sm:items-center'>
       <label htmlFor={k}><strong>{label}</strong></label>
       <input
         className="p-2 rounded-lg"
         name={k}
-        type="text"
+        type={type}
         value={v}
-        placeholder="Config-xxx"
+        placeholder={placeholder}
         onChange={(e) => {
-          setValue(e.target.value)
+          const value = type === 'number' ? +e.target.value : e.target.value;
+          setValue(value)
         }} />
     </div>
+  )
+}
+
+export const ConfigNameInput: React.FC<{
+  k: string;
+  v: string;
+  label: string
+  setValue: Dispatch<SetStateAction<string>>;
+}> = ({ k, v, label, setValue }) => {
+  return (
+    <Input
+      k={k}
+      type="text"
+      v={v}
+      label={label}
+      placeholder="Config-xxx"
+      setValue={(e) => {
+        setValue(e.target.value)
+      }} />
   )
 }
 

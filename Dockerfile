@@ -15,7 +15,6 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
@@ -50,8 +49,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/swBuild.js ./
 
 # Set the correct permission for prerender cache
 RUN mkdir .next
-RUN touch .env.local
-RUN chown nextjs:nodejs .next .env.local
+RUN touch .env
+RUN chown nextjs:nodejs .next .env
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
@@ -60,7 +59,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 
-
 EXPOSE 3000
 
 ENV PORT 3000
@@ -68,4 +66,3 @@ ENV PORT 3000
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
 CMD HOSTNAME="0.0.0.0" node server.js
-# CMD ["yarn", "start"]

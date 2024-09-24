@@ -9,13 +9,10 @@ import { useRouter } from "next/navigation"
 import { APIConfig } from "@/app/(Dashboard)/dashboard/config/_helper"
 
 export const ConfigForm: React.FC<{
-  config: TypeConfig | null;
-  error: string;
-  loading: boolean;
   setConfig: Dispatch<SetStateAction<TypeConfig | null>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
   setError: Dispatch<SetStateAction<string>>;
-}> = ({ config, setConfig, loading, setLoading, error, setError }) => {
+}> = ({ setConfig, setLoading, setError }) => {
   const router = useRouter()
   const [configName, setConfigName] = useState('')
   const [smrConf, setSmrConf] = useState(smrConfig)
@@ -27,7 +24,7 @@ export const ConfigForm: React.FC<{
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     setLoading(true)
     e.preventDefault();
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/config`
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/configs`
 
     const payload: { config: Config } = {
       config: {
@@ -44,14 +41,12 @@ export const ConfigForm: React.FC<{
       if (data.status !== 'success' || !data.data) throw new Error(data.message)
       setLoading(false)
       setConfig(data.data)
-      // console.log(data)
 
       router.push(`/dashboard/config/${data.data._id}`)
     } catch (error) {
       setLoading(false)
       if (error instanceof AxiosError) setError(error.response?.data.message || 'Request failed')
       else setError('Error Occured ' + (error as Error).message)
-      // console.log(error)
     }
   }
   const configHeaderStyles = 'font-bold text-3xl mb-4 text-blue-800 underline underline-offset-8 decoration-wavy';

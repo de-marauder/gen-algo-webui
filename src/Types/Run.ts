@@ -1,3 +1,5 @@
+import { Generations } from "@/app/(Dashboard)/dashboard/visualisation/_helpers";
+
 export type TypeRun = {
   _id: string;
   no: number;
@@ -10,6 +12,7 @@ export type TypeRun = {
   pressure: number;
   temperature: number;
   steamToCarbonRatio: number;
+  generations: Generations['generations'];
   numberOfGenerationsRan: number;
   stopCondition: string;
   timeTaken: string;

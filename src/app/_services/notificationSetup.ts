@@ -3,8 +3,6 @@ import { TypeUser } from "@/Types/User";
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 import type { Messaging } from "firebase/messaging";
-import { APIConfig } from "../(Dashboard)/dashboard/config/_helper";
-import axios from "axios";
 
 declare global {
   var registration: any
@@ -40,7 +38,6 @@ export async function doNotification(swr: ServiceWorkerRegistration, notif?: { t
       // if so, create a notification
       const u = JSON.parse(localStorage.getItem('site-user') || '') as TypeUser | ''
       if (u && u.fcmToken && localStorage.getItem('fcmToken')) {
-        // const notification = new Notification(notif?.title || "Permission Granted", notif?.notification || { body: 'You now have permissions' })
         swr.showNotification(notif?.title || "Permission Granted", notif?.notification || { body: 'You now have permissions' });
       } else {
         return await requestPermission(swr, notif)
@@ -60,6 +57,11 @@ export async function requestPermission(swr: ServiceWorkerRegistration, notif?: 
     if (permission === 'granted') {
       // Add the public key generated from the console here.
       if (messaging) {
+
+        console.log({
+          serviceWorkerRegistration: swr,
+          vapidKey: process.env.NEXT_PUBLIC_FCM_VAPID_KEY
+        })
 
         const fcmToken = await getToken(messaging, {
           serviceWorkerRegistration: swr,

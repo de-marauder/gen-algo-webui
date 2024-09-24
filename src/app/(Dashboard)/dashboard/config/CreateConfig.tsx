@@ -12,7 +12,6 @@ import { Button } from "@/app/_components/Buttons/Buttons"
 import axios, { AxiosError } from "axios"
 import { APIConfig } from "./_helper"
 import { useRouter } from "next/navigation"
-// import { resultItems } from "./_helper"
 
 export const CreateConfig = () => {
   const [config, setConfig] = useState<null | TypeConfig>(null)
@@ -23,23 +22,8 @@ export const CreateConfig = () => {
     <>
       {error && <Modal toggle={() => { setError('') }} isError={true} message={error} />}
       {loading && <Modal noCloseButton={true} toggle={() => { setLoading(false) }}><Loading /></Modal>}
-      {/* {
-        config && <Modal toggle={() => { setConfig(null) }} >
-          <div className='flex gap-4 flex-col p-4 m-4 border-double border-4 border-black bg-slate-100/80 text-slate-800 md:max-h-[40vh] overflow-hidden overflow-y-scroll'>
-            {resultItems(config).map(({ label, value, unit }, id) => {
-              return (
-                <config key={`config-item-${id + 1}`} label={label} value={value} unit={unit} />
-              )
-
-            })}
-          </div>
-        </Modal>
-      } */}
       <section id='config-section text-white' className="max-sm:p-2 max-sm:pb-[5rem] overflow-y-scroll h-[100vh]">
         <ConfigForm
-          config={config}
-          loading={loading}
-          error={error}
           setConfig={setConfig}
           setLoading={setLoading}
           setError={setError}
@@ -48,19 +32,6 @@ export const CreateConfig = () => {
     </>
   )
 }
-
-
-// const Result: React.FC<{ label: string; value: number; unit: string }> = ({ label, value, unit }) => {
-//   return (
-//     <>
-//       <div className="grid grid-cols-2 px-4 py-2 rounded bg-blue-800/10 hover:bg-blue-800/20 backdrop-blur-lg">
-//         <p className="font-bold">{label}: </p>
-//         <p className="text-right">{value} <i className="font-bold text-slate-700">{unit}</i></p>
-//       </div>
-//     </>
-//   )
-// }
-
 
 export const ConfigCard = ({ config }: { config: Omit<TypeConfig, 'userid'> }) => {
   const router = useRouter()
@@ -75,18 +46,14 @@ export const ConfigCard = ({ config }: { config: Omit<TypeConfig, 'userid'> }) =
 
   const deleteConfig = (configId: string) => {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/configs/${configId}`;
-    // console.log('configId: ', configId)
-    // console.log('url: ', url)
     setError('');
     setLoading(true);
     axios.delete(url, APIConfig)
       .then((response) => {
-        // console.log('deleted: ', response)
         setLoading(false);
         setShowDeleteModal(false)
         router.push('/dashboard/config/all')
       }).catch((error) => {
-        // console.log(error)
         setLoading(false);
         if (error instanceof AxiosError) setError(error.response?.data.message || 'Error making delete request')
         setError(error.message || 'request failed')

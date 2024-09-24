@@ -43,7 +43,7 @@ const Visualizations = () => {
     } else {
       setData(null)
     }
-  }, [])
+  }, [configId])
 
   return (
     <>

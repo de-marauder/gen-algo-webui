@@ -79,7 +79,7 @@ export const ViewAllRuns = () => {
     } else {
       setRuns([])
     }
-  }, [])
+  }, [configId])
 
   return (
     <>

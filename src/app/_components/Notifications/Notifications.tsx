@@ -174,7 +174,7 @@ export const SubscribeNotification = () => {
       )}
       <div className="p-2 flex gap-4 justify-between items-center">
         <p className="text-sm text-slate-800">Notifications</p>
-        <Toggle isActive={isSubscribed} setState={() => setIsSubscribed(!isSubscribed)} action={subscribeAction} />
+        <Toggle isActive={isSubscribed} action={subscribeAction} />
       </div>
     </>
   )

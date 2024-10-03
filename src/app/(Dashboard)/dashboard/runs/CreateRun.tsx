@@ -14,9 +14,7 @@ import ContextStore from "@/app/_components/store/context";
 
 export const CreateRun = () => {
   const { configId, configs } = useContext(ContextStore)
-  // const [configs, setConfigs] = useState<(TypeConfig | never)[]>([]);
   const [numberOfRuns, setNumberOfRuns] = useState<number>(1);
-  // const [configId, setConfigId] = useState<string>('');
   const [runRes, setRun] = useState<TypeRun[] | null>(null);
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -112,10 +110,77 @@ export const SelectConfig = ({ trigger, configs, fetchGraphData }: {
                     >{config.name}</option>
                   )
                 })
-                : <p>No Configurations</p>
+                : <option>No Configurations</option>
             }
           </select>}
       </div>
     </>
   )
 }
+
+export const SelectMultiConfig = ({
+  trigger,
+  configs,
+  fetchGraphData,
+  selectedConfigs,
+  setSelectedConfigs,
+  removeData
+}: {
+  trigger?: (configIds: string[]) => void;
+  configs: TypeConfig[] | null;
+  fetchGraphData: (configIds: string[]) => void;
+  selectedConfigs: string[];
+  setSelectedConfigs: (configs: string[]) => void;
+  removeData: (configIds: string[]) => void;
+}) => {
+  const {
+    updateConfigError,
+    configLoading,
+    configError,
+  } = useContext(ContextStore);
+
+  const handleCheckboxChange = (configId: string) => {
+    let updatedConfigs;
+    if (selectedConfigs.includes(configId)) {
+      updatedConfigs = selectedConfigs.filter((id) => id !== configId)
+      removeData([configId])
+    } else {
+      updatedConfigs = [...selectedConfigs, configId];
+      fetchGraphData([configId]); // Fetch data for the selected configs
+    }
+    setSelectedConfigs(updatedConfigs);
+    if (trigger) trigger(updatedConfigs); // Trigger any additional logic
+  };
+
+  return (
+    <>
+      {configError && <Modal toggle={() => updateConfigError('')} isError={true} message="Could not fetch configs" />}
+      <div className="w-full max-sm:py-2 flex flex-col gap-4 rounded-xl h-20 overflow-y-scroll inset-2">
+        {configLoading ? (
+          <Loading type={'xs'} />
+        ) : (
+          <>
+            <div className="text-white p-4 w-full rounded bg-slate-800 flex flex-wrap">
+              {configs && configs.length > 0 ? (
+                configs.map((config) => (
+
+                  <label key={config._id} className="flex items-center gap-2 w-full md:w-1/3">
+                    <input
+                      type="checkbox"
+                      value={config._id}
+                      checked={selectedConfigs.includes(config._id)}
+                      onChange={() => handleCheckboxChange(config._id)}
+                    />
+                    {config.name}
+                  </label>
+                ))
+              ) : (
+                <p>No Configurations Available</p>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    </>
+  );
+};

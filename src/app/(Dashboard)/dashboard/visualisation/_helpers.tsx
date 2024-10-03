@@ -36,33 +36,33 @@ export type GraphData = {
 
 export const graphs: GraphData[] = [
   {
-    caption: 'Amt. of Hydrogen vs No. of Runs',
+    caption: 'Amount of Hydrogen vs No. of Runs',
     xLabel: 'No. of Runs',
-    yLabel: 'Amt. of H2 (kmol)',
+    yLabel: 'Amount of H₂ (kmol)',  // H₂ with subscript
     item: 'outputH2'
   },
   {
-    caption: 'Amt. of CO2 vs No. of Runs',
+    caption: 'Amount of CO₂ vs No. of Runs',
     xLabel: 'No. of Runs',
-    yLabel: 'Amt. of CO2 (kmol)',
+    yLabel: 'Amount of CO₂ (kmol)',  // CO₂ with subscript
     item: 'outputCO2'
   },
   {
-    caption: 'Amt. of Methane vs No. of Runs',
+    caption: 'Amount of Methane vs No. of Runs',
     xLabel: 'No. of Runs',
-    yLabel: 'Amt. of CH4 (kmol)',
+    yLabel: 'Amount of CH₄ (kmol)',  // CH₄ with subscript
     item: 'outputCH4'
   },
   {
-    caption: 'Amt. of CO vs No. of Runs',
+    caption: 'Amount of CO vs No. of Runs',
     xLabel: 'No. of Runs',
-    yLabel: 'Amt. of CO (kmol)',
+    yLabel: 'Amount of CO (kmol)',   // CO has no subscripts
     item: 'outputCO'
   },
   {
-    caption: 'Amt. of Water vs No. of Runs',
+    caption: 'Amount of Water vs No. of Runs',
     xLabel: 'No. of Runs',
-    yLabel: 'Amt. of H2O (kmol)',
+    yLabel: 'Amount of H₂O (kmol)',  // H₂O with subscript
     item: 'outputH2O'
   },
   {
@@ -78,7 +78,7 @@ export const graphs: GraphData[] = [
     item: 'temperature'
   },
   {
-    caption: 'S/C vs No. of Runs',
+    caption: 'Steam-to-carbon ratio vs No. of Runs',
     xLabel: 'No. of Runs',
     yLabel: 'Steam-to-carbon ratio [S/C] (kmol/kmol)',
     item: 'steamToCarbonRatio'

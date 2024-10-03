@@ -36,16 +36,16 @@ export const traitBoundariesConfigInputLabels = {
   steamCarbonRatioUpperbound: 'S/C ratio upper bound (kmol/kmol)',
 }
 export const smrConfig = {
-  smrPopSize: 30,
-  smrGenSize: 50,
+  smrPopSize: 50,
+  smrGenSize: 100,
   smrMovingAverage: 10,
-  smrMutationProbability: 20,
+  smrMutationProbability: 45,
 },
   mbConfig = {
-    mbPopSize: 30,
-    mbGenSize: 30,
+    mbPopSize: 50,
+    mbGenSize: 100,
     mbMovingAverage: 10,
-    mbMutationProbability: 10,
+    mbMutationProbability: 45,
   },
   standardPressure: StPressure = '1.01325',
   flareGasComposition = {

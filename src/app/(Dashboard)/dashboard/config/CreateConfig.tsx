@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import { ConfigForm } from "../../../_components/Forms/config"
 import { Modal } from "../../../_components/Modals/Modal"
 import Loading from "../../../(Home)/loading"
@@ -12,6 +12,7 @@ import { Button } from "@/app/_components/Buttons/Buttons"
 import axios, { AxiosError } from "axios"
 import { APIConfig } from "./_helper"
 import { useRouter } from "next/navigation"
+import ContextStore from "@/app/_components/store/context"
 
 export const CreateConfig = () => {
   const [config, setConfig] = useState<null | TypeConfig>(null)
@@ -36,6 +37,7 @@ export const CreateConfig = () => {
 export const ConfigCard = ({ config }: { config: Omit<TypeConfig, 'userid'> }) => {
   const router = useRouter()
   const pathname = usePathname();
+  const { configs, updateConfigs } = useContext(ContextStore)
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('')
@@ -52,6 +54,7 @@ export const ConfigCard = ({ config }: { config: Omit<TypeConfig, 'userid'> }) =
       .then((response) => {
         setLoading(false);
         setShowDeleteModal(false)
+        updateConfigs(configs.filter((el)=>el._id !== configId))
         router.push('/dashboard/config/all')
       }).catch((error) => {
         setLoading(false);

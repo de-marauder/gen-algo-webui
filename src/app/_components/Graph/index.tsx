@@ -14,6 +14,7 @@ export const LineChart: React.FC<{
   yLabel: string;
   outerSection: React.MutableRefObject<HTMLDivElement | null>;
   item: GraphItemsKeys;
+  refresh: (config: string) => void;
   fetchData: (item: GraphItemsKeys) => Promise<{
     graph: DataPoints;
     error: null;
@@ -21,7 +22,7 @@ export const LineChart: React.FC<{
     error: Error;
     graph: null;
   }>;
-}> = ({ caption, xLabel, yLabel, outerSection, fetchData, item }) => {
+}> = ({ caption, xLabel, refresh, yLabel, outerSection, fetchData, item }) => {
   const { configId } = useContext(ContextStore)
   const [data, setData] = useState<DataPoints | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,6 +35,7 @@ export const LineChart: React.FC<{
   const doReload = () => {
     setError('');
     setReload(true);
+    refresh(configId)
   };
 
   useEffect(() => {
@@ -47,6 +49,7 @@ export const LineChart: React.FC<{
     fetchData(item)
       .then(({ graph, error }) => {
         if (error) throw new Error(error.message);
+        if (graph.length === 0) throw new Error('No data available');
         setData(graph);
         setLoading(false);
       })
@@ -91,7 +94,7 @@ export const LineChart: React.FC<{
     // Add 10% padding to the top and bottom of y-axis
     const yMin = d3.min(y) ?? 0;
     const yMax = d3.max(y) ?? 0;
-    const yPadding = (yMax - yMin) * 0.1;
+    const yPadding = (yMax - yMin) * 2;
 
     const yScale = d3.scaleLinear()
       .domain([yMin - yPadding, yMax + yPadding]).nice()
@@ -243,11 +246,12 @@ export const LineChart: React.FC<{
         />
         <p className='text-center'>{xLabel}</p>
       </div>
-      <figcaption className='mt-2 text-center text-xl'><strong>{caption}</strong></figcaption>
+      <figcaption className='mt-2 text-center text-xl'>{caption}</figcaption>
       {showIndividualGA && (
         <IndividualGAGraph
           setShowIndividualGA={setShowIndividualGA}
           showIndividualGA={showIndividualGA}
+          runId={selectedPoint ? selectedPoint.x : 0}
           datapoint={selectedPoint?.generations.map((d, id) => ({
             ...d,
             id: id + 1
@@ -258,13 +262,274 @@ export const LineChart: React.FC<{
   );
 };
 
+export const MultiLineChart: React.FC<{
+  configIds: string[];
+  caption: string;
+  xLabel: string;
+  yLabel: string;
+  outerSection: React.MutableRefObject<HTMLDivElement | null>;
+  item: GraphItemsKeys; // Multiple datasets
+  refresh: (config: string[]) => void;
+  loadData: (item: GraphItemsKeys) => Promise<{
+    graphs: DataPoints[];
+    error: null;
+  } | {
+    error: Error;
+    graphs: null;
+  }>;
+}> = ({ configIds, caption, xLabel, yLabel, outerSection, item, refresh, loadData }) => {
+  const [dataSets, setDataSets] = useState<DataPoints[]>([]); // Store multiple datasets
+  const [showIndividualGA, setShowIndividualGA] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [reload, setReload] = useState(false);
+  const [selectedPoint, setSelectedPoint] = useState<DataPoint | null>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  const doReload = () => {
+    setError('');
+    setReload(true);
+    refresh(configIds);
+  };
+
+  useEffect(() => {
+    setReload(false);
+    setError('');
+    if (!configIds || !configIds.length) {
+      setLoading(false);
+      return setError('No Config selected');
+    }
+
+    loadData(item)
+      .then(({ graphs, error }) => {
+        if (error) return setError(error.message)
+        if (!graphs) return setError('No Graph')
+        setDataSets(graphs);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        setError(error.message);
+      });
+  }, [loadData, item, reload, configIds]);
+
+  const selectWidth = () => {
+    const wrapperContainer = outerSection.current?.clientWidth ?? 0;
+    if (wrapperContainer > 1000) {
+      return wrapperContainer / 3;
+    } else if (wrapperContainer > 500 && wrapperContainer <= 1000) {
+      return wrapperContainer / 2;
+    } else {
+      return 500;
+    }
+  };
+
+  const margin = useMemo(() => ({ top: 20, right: 50, bottom: 30, left: 40 }), []);
+  const width = selectWidth() - margin.left - margin.right;
+  const height = 400 - margin.top - margin.bottom;
+
+  useEffect(() => {
+    if (!svgRef.current || !dataSets.length) return;
+
+    const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove();
+
+    // Combine all x and y values from all datasets
+    const allX = dataSets.flatMap(data => data.map((el) => el.x));
+    const allY = dataSets.flatMap(data => data.map((el) => el.y));
+
+    // Scales
+    const xMax = d3.max(allX) ?? 0;
+    const xMin = d3.min(allX) ?? 0;
+    const xPadding = (xMax - xMin) * 0.1;
+    const xScale = d3.scaleLinear()
+      .domain([xMin - (xMin / 10), xMax + xPadding]).nice()
+      .range([0, width]);
+
+    const yMin = d3.min(allY) ?? 0;
+    const yMax = d3.max(allY) ?? 0;
+    const yPadding = (yMax - yMin) * 1.2;
+    const yScale = d3.scaleLinear()
+      .domain([yMin - yPadding, yMax + yPadding]).nice()
+      .range([height, 0]);
+
+    const g = svg.append('g')
+      .attr('transform', `translate(${margin.left},${margin.top})`);
+
+
+    // Add tooltip
+    const tooltip = svg.append('g')
+      .attr('class', 'tooltip')
+      .style('display', 'none');
+
+    tooltip.append('rect')
+      .attr('width', 145)
+      .attr('height', 30)
+      .attr('fill', 'black')
+      .style('opacity', 0.8);
+
+    const tooltipText = tooltip.append('text')
+      .attr('x', 10)
+      .attr('y', 20)
+      .attr('fill', 'white');
+
+    // Add cursor-following gridlines
+    const verticalLine = g.append('line')
+      .attr('class', 'cursor-line')
+      .attr('y1', 0)
+      .attr('y2', height)
+      .style('stroke', 'gray')
+      .style('stroke-width', 1)
+      .style('stroke-dasharray', '5,5')
+      .style('display', 'none');
+
+    const horizontalLine = g.append('line')
+      .attr('class', 'cursor-line')
+      .attr('x1', 0)
+      .attr('x2', width)
+      .style('stroke', 'gray')
+      .style('stroke-width', 1)
+      .style('stroke-dasharray', '5,5')
+      .style('display', 'none');
+
+    g.append('rect')
+      .attr('width', width)
+      .attr('height', height)
+      .style('fill', '#eee')
+      .style('pointer-events', 'all')
+      .on('mouseover', () => {
+        verticalLine.style('display', null);
+        horizontalLine.style('display', null);
+      })
+      .on('mouseout', () => {
+        verticalLine.style('display', 'none');
+        horizontalLine.style('display', 'none');
+        tooltip.style('display', 'none');
+      })
+      .on('mousemove', (event) => {
+        const [x, y] = d3.pointer(event);
+        verticalLine.attr('transform', `translate(${x},0)`);
+        horizontalLine.attr('transform', `translate(0,${y})`);
+
+        // Update tooltip
+        const xValue = xScale.invert(x).toFixed(2);
+        const yValue = yScale.invert(y).toFixed(2);
+        tooltip.style('display', null);
+        tooltipText.text(`x: ${xValue}, y: ${yValue}`);
+        tooltip.attr('transform', `translate(${x + margin.left},${y + margin.top - 60})`);
+      });
+
+    // Create gridlines
+    g.append('g')
+      .attr('class', 'grid')
+      .attr('transform', `translate(0,${height})`)
+      .attr('color', 'grey')
+      .call(d3.axisBottom(xScale).tickSize(-height).tickFormat(() => ''));
+
+    g.append('g')
+      .attr('class', 'grid')
+      .attr('color', 'grey')
+      .call(d3.axisLeft(yScale).tickSize(-width).tickFormat(() => ''));
+
+    // Colors for each dataset (can be customized)
+    const colors = ['black', 'crimson', 'orange'];
+    const shapes = [d3.symbolCircle, d3.symbolTriangle, d3.symbolSquare]; // Use D3 symbol types
+
+    // Render multiple lines
+    dataSets.forEach((data, index) => {
+      const line = d3.line<DataPoints[0]>()
+        .x(d => xScale(d.x))
+        .y(d => yScale(d.y));
+
+      g.append('path')
+        .datum(data)
+        .attr('fill', 'none')
+        .attr('stroke', colors[index % colors.length])
+        .attr('stroke-width', 2)
+        .attr('d', line);
+
+      // Optionally, add data points
+      g.selectAll(`.dot-${index}`)
+        .data(data)
+        .enter().append('path')
+        .attr('class', `dot-${index}`)
+        .attr('d', d3.symbol().type(shapes[index % shapes.length]).size(64)) // Set shape type and size
+        .attr('transform', d => `translate(${xScale(d.x)}, ${yScale(d.y)})`) // Position points
+        .attr('fill', colors[index % colors.length])
+        .on('mouseover', (event, d) => {
+          tooltip.style('display', null);
+          tooltipText.text(`x: ${(d as DataPoint).x}, y: ${(d as DataPoint).y}`);
+          const [x, y] = d3.pointer(event);
+          tooltip.attr('transform', `translate(${x},${y - 60})`);
+        })
+        .on('mouseout', () => {
+          tooltip.style('display', 'none');
+        })
+        .on('click', (event, d) => {
+          setShowIndividualGA(true);
+          setSelectedPoint(d);
+        });
+    })
+    // Add axes
+    g.append('g')
+        .attr('transform', `translate(0,${height})`)
+        .call(d3.axisBottom(xScale));
+
+    g.append('g')
+      .call(d3.axisLeft(yScale));
+
+  }, [dataSets, margin, width, height]);
+
+  return (
+    <div className='w-fit relative p-4 pl-8 hover:bg-grey-100 bg-white text-black'>
+      <div className='relative w-fit ring-2 ring-inset ring-gray-700 rounded'>
+        <p className='absolute w-full text-center rotate-[-90deg] translate-x-[-52%] translate-y-[-100%] bottom-[40%]'>{yLabel}</p>
+        {(loading && !reload) && <Loading />}
+        {error && (
+          <div className='p-4 grid place-items-center rounded-xl absolute top-0 left-0 bottom-0 right-0 bg-blue-800/10 backdrop-blur-3xl'>
+            <center>
+              <p className='text-red'>{error}</p>
+              <Button type='lg' styles='px-8 text-xl' onClick={doReload}>Retry</Button>
+            </center>
+          </div>
+        )}
+        <Blur styles={''} />
+        <svg
+          style={{
+            backgroundColor: 'rgba(255, 255, 255)',
+          }}
+          ref={svgRef}
+          width={width + margin.left + margin.right}
+          height={height + margin.top + margin.bottom}
+        />
+        <p className='text-center'>{xLabel}</p>
+      </div>
+      <figcaption className='mt-2 text-center text-xl'>{caption}</figcaption>
+      {showIndividualGA && (
+        <IndividualGAGraph
+          setShowIndividualGA={setShowIndividualGA}
+          showIndividualGA={showIndividualGA}
+          runId={selectedPoint ? selectedPoint.x : 0}
+          datapoint={selectedPoint?.generations.map((d, id) => ({
+            ...d,
+            id: id + 1
+          })) || null}
+        />
+      )}
+    </div>
+  );
+};
+
+
 const IndividualGAGraph = ({
   setShowIndividualGA,
   showIndividualGA,
-  datapoint
+  datapoint,
+  runId
 }: {
   setShowIndividualGA: React.Dispatch<React.SetStateAction<boolean>>;
   showIndividualGA: boolean;
+  runId: number;
   datapoint: DataPoint['generations'] | null
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -315,7 +580,7 @@ const IndividualGAGraph = ({
     const miny = Math.min(...y);
     const maxy = Math.max(...y);
     const yScale = d3.scaleLinear()
-      .domain([miny - (miny / 10), maxy + (maxy / 10)])
+      .domain([miny - (miny / 50), maxy + (maxy / 50)])
       .nice()
       .range([dimensions.height, 0]);
 
@@ -460,7 +725,8 @@ const IndividualGAGraph = ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#24365b'
+      backgroundColor: 'white',
+      color: 'black'
     }} toggle={() => { setShowIndividualGA(!showIndividualGA) }}>
       <div style={{
         width: '100%',
@@ -486,7 +752,7 @@ const IndividualGAGraph = ({
             display: 'block',
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            backgroundColor: 'rgba(255, 255, 255)',
             borderRadius: '5px',
             maxHeight: '500px'  // Adjust this value as needed
           }} ref={svgRef}></svg>
@@ -494,7 +760,6 @@ const IndividualGAGraph = ({
         <p style={{
           marginTop: '10px',
           marginBottom: '0px',
-          color: 'white',
           fontSize: '16px',
           position: 'absolute',
           left: '0%',
@@ -503,7 +768,7 @@ const IndividualGAGraph = ({
         }}>Amount of Hydrogen (kmol)</p>
         <p style={{
           marginTop: '10px',
-        }}>No. of iterations</p>
+        }}>Number of generations</p>
       </div>
     </Modal>
   )

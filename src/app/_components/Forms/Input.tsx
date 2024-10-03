@@ -40,9 +40,7 @@ export const ConfigNameInput: React.FC<{
       v={v}
       label={label}
       placeholder="Config-xxx"
-      setValue={(e) => {
-        setValue(e.target.value)
-      }} />
+      setValue={setValue} />
   )
 }
 

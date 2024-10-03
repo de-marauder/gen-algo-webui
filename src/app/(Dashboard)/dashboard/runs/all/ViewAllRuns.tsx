@@ -23,6 +23,10 @@ type FieldsInRunsShown = {
   temperature: number;
   steamToCarbonRatio: number
 }
+type StatisticsResult = {
+  average: FieldsInRunsShown;
+  standardDeviation: FieldsInRunsShown;
+}
 
 const defaultAv = {
   pressure: 0,
@@ -37,41 +41,71 @@ const defaultAv = {
 
 export const ViewAllRuns = () => {
   const { configId, configs } = useContext(ContextStore)
-  const [runs, setRuns] = useState<TypeRun[] | []>([]);
+  const [runs, setRuns] = useState<TypeRun[]>([]);
   const [averages, setAverages] = useState<FieldsInRunsShown>(defaultAv);
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  const [statistics, setStatistics] = useState<StatisticsResult>({
+    average: defaultAv,
+    standardDeviation: defaultAv
+  });
+
+  const calculateStatistics = (runs: TypeRun[]) => {
+    if (runs.length === 0) return;
+
+    const sum = runs.reduce((prev, curr) => ({
+      pressure: prev.pressure + curr.pressure,
+      temperature: prev.temperature + curr.temperature,
+      steamToCarbonRatio: prev.steamToCarbonRatio + curr.steamToCarbonRatio,
+      outputH2: prev.outputH2 + curr.outputH2,
+      outputCO2: prev.outputCO2 + curr.outputCO2,
+      outputCO: prev.outputCO + curr.outputCO,
+      outputH2O: prev.outputH2O + curr.outputH2O,
+      outputCH4: prev.outputCH4 + curr.outputCH4,
+    }), defaultAv);
+
+    const average = Object.keys(sum).reduce((avg, key) => {
+      avg[key as keyof typeof avg] = sum[key as keyof typeof sum] / runs.length;
+      return avg;
+    }, {} as FieldsInRunsShown);
+
+    const squaredDiffs = runs.reduce((prev, curr) => ({
+      pressure: prev.pressure + Math.pow(curr.pressure - average.pressure, 2),
+      temperature: prev.temperature + Math.pow(curr.temperature - average.temperature, 2),
+      steamToCarbonRatio: prev.steamToCarbonRatio + Math.pow(curr.steamToCarbonRatio - average.steamToCarbonRatio, 2),
+      outputH2: prev.outputH2 + Math.pow(curr.outputH2 - average.outputH2, 2),
+      outputCO2: prev.outputCO2 + Math.pow(curr.outputCO2 - average.outputCO2, 2),
+      outputCO: prev.outputCO + Math.pow(curr.outputCO - average.outputCO, 2),
+      outputH2O: prev.outputH2O + Math.pow(curr.outputH2O - average.outputH2O, 2),
+      outputCH4: prev.outputCH4 + Math.pow(curr.outputCH4 - average.outputCH4, 2),
+    }), defaultAv);
+
+    const standardDeviation = Object.keys(squaredDiffs).reduce((sd, key) => {
+      sd[key as keyof typeof sd] = Math.sqrt(squaredDiffs[key as keyof typeof squaredDiffs] / runs.length);
+      return sd;
+    }, {} as FieldsInRunsShown);
+
+    setStatistics({ average, standardDeviation });
+  };
+
   const getRuns = (confId: string) => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/runs?configId=${confId}`
-    setLoading(true)
-    setError('')
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/runs?configId=${confId}`;
+    setLoading(true);
+    setError('');
     axios.get<{ data: TypeRun[] }>(url, APIConfig)
       .then((response) => {
-        const r = response.data.data
+        const r = response.data.data;
         setLoading(false);
-        setRuns(r)
+        setRuns(r);
         if (r.length > 0) {
-          const av = (r as FieldsInRunsShown[]).reduce((prev, curr, id, arr) => {
-            return {
-              pressure: prev.pressure + curr.pressure,
-              temperature: prev.temperature + curr.temperature,
-              steamToCarbonRatio: prev.steamToCarbonRatio + curr.steamToCarbonRatio,
-              outputH2: prev.outputH2 + curr.outputH2,
-              outputCO2: prev.outputCO2 + curr.outputCO2,
-              outputCO: prev.outputCO + curr.outputCO,
-              outputH2O: prev.outputH2O + curr.outputH2O,
-              outputCH4: prev.outputCH4 + curr.outputCH4,
-            }
-          }, defaultAv)
-          setAverages(av)
+          calculateStatistics(r);
         }
       }).catch((error) => {
         setLoading(false);
         setError(error.message);
-
-      })
-  }
+      });
+  };
 
   useEffect(() => {
     if (configId) {
@@ -90,12 +124,17 @@ export const ViewAllRuns = () => {
         </div>
         <div className="mx-auto max-sm:px-2 lg:max-w-full overflow-x-scroll lg:overflow-auto min-h-[60vh] rounded-xl border border-blue-800/20 grid">
           <div className="bg-blue-800/10 w-full">
-            <h1 className="max-sm:px-4 p-2 sm:pt-8 sm:px-8 font-bold sm:text-3xl mb-4">Average results</h1>
+            <h1 className="max-sm:px-4 p-2 sm:pt-8 sm:px-8 font-bold sm:text-3xl mb-4">Statistical results</h1>
             <div className="grid grid-cols-3 mb-4 bg-blue-800/20">
-              {averages && Object.entries(averages).map(([key, val]) => {
+              {statistics.average && Object.entries(statistics.average).map(([key, val]) => {
+                const stdDev = statistics.standardDeviation[key as keyof typeof statistics.standardDeviation];
                 return (
-                  <p key={key} className="px-4 py-2 my-2"><strong>{key.toLowerCase().startsWith('output') ? key.replace('put', 'put ') : toTitleCase(key)}</strong>: {(val / runs.length) ? (val / runs.length).toFixed(2) : 0}</p>
-                )
+                  <div key={key} className="px-4 py-2 my-2">
+                    <p><strong>{key.toLowerCase().startsWith('output') ? key.replace('put', 'put ') : toTitleCase(key)}</strong></p>
+                    <p>Average: {val.toFixed(2)}</p>
+                    <p>Std Dev: {stdDev.toFixed(2)}</p>
+                  </div>
+                );
               })}
             </div>
           </div>

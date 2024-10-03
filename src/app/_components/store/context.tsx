@@ -7,7 +7,7 @@ import { createContext } from 'react';
 const ContextStore = createContext<{
   user: TypeUser | null; updateUser: (user: TypeUser | null) => void;
   configId: string; updateConfigId: (configId: string) => void;
-  configs: TypeConfig[] | null; updateConfigs: (configs: TypeConfig[] | null) => void;
+  configs: TypeConfig[]; updateConfigs: (configs: TypeConfig[]) => void;
   configLoading: boolean; updateConfigLoading: (loading: boolean) => void;
   configError: string; updateConfigError: (error: string) => void;
   notifications: boolean, updateNotification: (show: boolean) => void;
@@ -16,7 +16,7 @@ const ContextStore = createContext<{
 }>({
   user: null, updateUser: () => { },
   configId: '', updateConfigId: () => { },
-  configs: null, updateConfigs: () => { },
+  configs: [], updateConfigs: () => { },
   configLoading: false, updateConfigLoading: () => { },
   configError: '', updateConfigError: () => { },
   notifications: false, updateNotification: () => { },

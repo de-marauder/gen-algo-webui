@@ -1,4 +1,4 @@
-import { Dispatch, FormEvent, SetStateAction, useState } from "react"
+import { Dispatch, FormEvent, SetStateAction, useContext, useState } from "react"
 import { BoundsConfInput, CompositionConfInput, ConfigNameInput, MbConfInput, SmrConfInput, StPressureConfInput } from "./Input"
 import { Config } from "@/Types/Config"
 import axios, { AxiosError } from "axios"
@@ -7,6 +7,7 @@ import { convertObjectValuesToNumbers, flareGasComposition, flareGasCompositionC
 import { TypeConfig } from "@/Types/Config"
 import { useRouter } from "next/navigation"
 import { APIConfig } from "@/app/(Dashboard)/dashboard/config/_helper"
+import ContextStore from "../store/context"
 
 export const ConfigForm: React.FC<{
   setConfig: Dispatch<SetStateAction<TypeConfig | null>>;
@@ -14,6 +15,7 @@ export const ConfigForm: React.FC<{
   setError: Dispatch<SetStateAction<string>>;
 }> = ({ setConfig, setLoading, setError }) => {
   const router = useRouter()
+  const { configs, updateConfigs } = useContext(ContextStore)
   const [configName, setConfigName] = useState('')
   const [smrConf, setSmrConf] = useState(smrConfig)
   const [mbConf, setMbConf] = useState(mbConfig)
@@ -41,7 +43,7 @@ export const ConfigForm: React.FC<{
       if (data.status !== 'success' || !data.data) throw new Error(data.message)
       setLoading(false)
       setConfig(data.data)
-
+      updateConfigs(configs.concat(data.data))
       router.push(`/dashboard/config/${data.data._id}`)
     } catch (error) {
       setLoading(false)

@@ -22,8 +22,8 @@ export const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
     setConfigId(configId)
     localStorage.setItem('configId', configId);
   }
-  const [configs, setConfigs] = useState<TypeConfig[] | null>(null);
-  const updateConfigs = (configs: TypeConfig[] | null) => {
+  const [configs, setConfigs] = useState<TypeConfig[]>([]);
+  const updateConfigs = (configs: TypeConfig[]) => {
     setConfigs(configs)
   }
   const [configLoading, setConfigLoading] = useState<boolean>(false);

@@ -2,7 +2,7 @@
 
 <img src="./assets/images/gen_algo.png" alt="gen-algo" >
 
-A [website](https://gen-algo-webui.vercel.app/) for interacting with a [genetic algorithm](http://github.com/de-marauder/genetics_algorithm) to optimize hydrogen production from flare gases using a Steam Methane Reformer. It makes use of an [API](http://github.com/de-marauder/gen-algo-api) to provide a user friendly interface for users to run the algorithm with mulltiple configurations and study the results using visually pleasing graphs.
+A [website](https://gen-algo-webui.vercel.app/) for interacting with a [genetic algorithm](http://github.com/de-marauder/genetics_algorithm) to optimize hydrogen production from flare gases using a Steam Methane Reformer (My Bachelors thesis). It makes use of an [API](http://github.com/de-marauder/gen-algo-api) to provide a user friendly interface for users to run the algorithm with mulltiple configurations and study the results using visually pleasing graphs.
 
 ## How to use
 

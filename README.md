@@ -24,8 +24,7 @@ You also get a nice table to view all your runs per configuration. A summary of 
 
 ### Visualizations
 You view graphs that map the way the results of the algorithm changes with successive runs. This can help you gain an idea of the algorithms performance and suitability of the results obtained. You can also easily compare them with graphs from the results obtained with other configurations by simply toggling between different configs.
-
-<img src="./assets/images/visualizations.png" alt="visualizations">
+![image](https://github.com/user-attachments/assets/c53d84cb-d0cd-4135-a1d6-83cc70fe6dde)
 
 ## Technologies
 - Website was built with NextJs 13. It makes use of the App Router

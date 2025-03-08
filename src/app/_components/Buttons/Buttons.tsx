@@ -2,7 +2,7 @@ import { ReactNode } from "react"
 
 export const Button: React.FC<{ styles?: string; children: ReactNode, type: 'sm' | 'lg', onClick?: () => void }> = ({ styles, children, type, onClick }) => {
   return (
-    <button onClick={onClick} className={
+    <button style={{ color: 'white' }} onClick={onClick} className={
       (type === 'sm' ?
         "p-2 "
         : type === 'lg' ?

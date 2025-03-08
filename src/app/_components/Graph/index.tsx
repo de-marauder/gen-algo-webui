@@ -1,5 +1,6 @@
 'use client'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { IoIosExpand } from "react-icons/io";
 import * as d3 from 'd3';
 import { DataPoint, DataPoints, GraphItemsKeys } from '@/app/(Dashboard)/dashboard/visualisation/_helpers';
 import Loading from '@/app/(Dashboard)/dashboard/visualisation/loading';
@@ -284,6 +285,9 @@ export const MultiLineChart: React.FC<{
   const [error, setError] = useState('');
   const [reload, setReload] = useState(false);
   const [selectedPoint, setSelectedPoint] = useState<DataPoint | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const chartId = `ch-${Math.floor(Math.random() * 100)}`
+  const expandButtonId = `${chartId}-toggleExpand`;
   const svgRef = useRef<SVGSVGElement>(null);
 
   const doReload = () => {
@@ -315,6 +319,9 @@ export const MultiLineChart: React.FC<{
 
   const selectWidth = () => {
     const wrapperContainer = outerSection.current?.clientWidth ?? 0;
+    if (isExpanded) {
+      return Math.min(wrapperContainer - 40, 1200); // Max expanded width
+    }
     if (wrapperContainer > 1000) {
       return wrapperContainer / 3;
     } else if (wrapperContainer > 500 && wrapperContainer <= 1000) {
@@ -324,9 +331,63 @@ export const MultiLineChart: React.FC<{
     }
   };
 
+  const selectHeight = () => {
+    return isExpanded ? 600 : 400; // Expanded vs normal height
+  };
+
   const margin = useMemo(() => ({ top: 20, right: 50, bottom: 30, left: 40 }), []);
   const width = selectWidth() - margin.left - margin.right;
-  const height = 400 - margin.top - margin.bottom;
+  const height = selectHeight() - margin.top - margin.bottom;
+
+  // Colors for each dataset (can be customized)
+  const colors = useMemo(() => ['black', 'crimson', 'orange'], []);
+  const shapes = useMemo(() => [d3.symbolCircle, d3.symbolTriangle, d3.symbolSquare], []); // Use D3 symbol types
+
+  const toggleSize = () => {
+    const chart = document.getElementById(chartId);
+    const expandButton = document.getElementById(expandButtonId);
+    if (!chart || !expandButton) return;
+    const chartWrapper = chart.parentElement;
+    if (!chartWrapper) return;
+
+    if (isExpanded) {
+      // Return to normal mode
+      chartWrapper.style.backgroundColor = 'transparent';
+      chartWrapper.style.zIndex = '';
+      chartWrapper.style.position = 'relative';
+      chartWrapper.style.right = '';
+      chartWrapper.style.left = '';
+      chartWrapper.style.bottom = '';
+      chartWrapper.style.top = '';
+      chartWrapper.style.display = 'block';
+      chartWrapper.style.placeContent = '';
+
+      // Reset expand button position
+      expandButton.style.position = '';
+      expandButton.style.top = '';
+      expandButton.style.right = '';
+      expandButton.style.zIndex = '';
+    } else {
+      // Expand mode
+      chartWrapper.style.backgroundColor = 'rgba(255,255,255)';
+      chartWrapper.style.zIndex = '100';
+      chartWrapper.style.position = 'absolute';
+      chartWrapper.style.right = '0';
+      chartWrapper.style.left = '0';
+      chartWrapper.style.bottom = '0';
+      chartWrapper.style.top = '0';
+      chartWrapper.style.display = 'grid';
+      chartWrapper.style.placeContent = 'center';
+
+      // Move expand button to top right corner of viewport
+      expandButton.style.position = 'fixed';
+      expandButton.style.top = '20px';
+      expandButton.style.right = '20px';
+      expandButton.style.zIndex = '101';
+    }
+
+    setIsExpanded(!isExpanded);
+  };
 
   useEffect(() => {
     if (!svgRef.current || !dataSets.length) return;
@@ -431,10 +492,6 @@ export const MultiLineChart: React.FC<{
       .attr('color', 'grey')
       .call(d3.axisLeft(yScale).tickSize(-width).tickFormat(() => ''));
 
-    // Colors for each dataset (can be customized)
-    const colors = ['black', 'crimson', 'orange'];
-    const shapes = [d3.symbolCircle, d3.symbolTriangle, d3.symbolSquare]; // Use D3 symbol types
-
     // Render multiple lines
     dataSets.forEach((data, index) => {
       const line = d3.line<DataPoints[0]>()
@@ -472,54 +529,113 @@ export const MultiLineChart: React.FC<{
     })
     // Add axes
     g.append('g')
-        .attr('transform', `translate(0,${height})`)
-        .call(d3.axisBottom(xScale));
+      .attr('transform', `translate(0,${height})`)
+      .call(d3.axisBottom(xScale));
 
     g.append('g')
       .call(d3.axisLeft(yScale));
 
-  }, [dataSets, margin, width, height]);
+    // Add legend (only in expanded view or if there's enough space)
+    if (isExpanded || width > 400) {
+      const legend = svg.append('g')
+        .attr('class', 'legend')
+        .attr('transform', `translate(${width + margin.left - 120}, ${margin.top + 20})`);
+
+      // Add background rectangle
+      legend.append('rect')
+        .attr('width', 120) // Adjust width as needed
+        .attr('height', dataSets.length * 30 + 8) // Adjust height dynamically
+        .attr('fill', 'white')
+        .attr('stroke', 'black')
+        .attr('rx', 5) // Rounded corners
+        .attr('ry', 5)
+        .attr('x', -10)
+        .attr('y', -10);
+
+      dataSets.forEach((dataset, i) => {
+        const legendRow = legend.append('g')
+          .attr('transform', `translate(0, ${i * 30})`);
+
+        // Add the colored symbol
+        legendRow.append('path')
+          .attr('d', d3.symbol().type(shapes[i % shapes.length]).size(64))
+          .attr('fill', colors[i % colors.length])
+          .attr('transform', 'translate(0, 0)');
+
+        // Add the line
+        legendRow.append('line')
+          .attr('x1', 10)
+          .attr('y1', 0)
+          .attr('x2', 40)
+          .attr('y2', 0)
+          .attr('stroke', colors[i % colors.length])
+          .attr('stroke-width', 2);
+
+        // Add the text
+        legendRow.append('text')
+          .attr('x', 50)
+          .attr('y', 5)
+          .text(`Flare ${i + 1}`)
+          .style('font-size', '12px')
+          .attr('alignment-baseline', 'middle');
+      });
+    }
+
+  }, [dataSets, margin, width, height, isExpanded, colors, shapes]);
 
   return (
-    <div className='w-fit relative p-4 pl-8 hover:bg-grey-100 bg-white text-black'>
-      <div className='relative w-fit ring-2 ring-inset ring-gray-700 rounded'>
-        <p className='absolute w-full text-center rotate-[-90deg] translate-x-[-52%] translate-y-[-100%] bottom-[40%]'>{yLabel}</p>
-        {(loading && !reload) && <Loading />}
-        {error && (
-          <div className='p-4 grid place-items-center rounded-xl absolute top-0 left-0 bottom-0 right-0 bg-blue-800/10 backdrop-blur-3xl'>
-            <center>
-              <p className='text-red'>{error}</p>
-              <Button type='lg' styles='px-8 text-xl' onClick={doReload}>Retry</Button>
-            </center>
+    <div>
+      <div className='relative' onClick={isExpanded ? toggleSize : () => { }}>
+        <div id={chartId} className='w-fit relative p-4 pl-8 hover:bg-grey-100 bg-white text-black'>
+          <div
+            id={expandButtonId}
+            className='absolute right-5 z-10 bg-slate-200 hover:bg-slate-400 border p-1 rounded-lg cursor-pointer shadow-md'
+            onClick={toggleSize}
+            style={{
+              transition: 'all 0.3s ease'
+            }}
+          >
+            <IoIosExpand />
           </div>
-        )}
-        <Blur styles={''} />
-        <svg
-          style={{
-            backgroundColor: 'rgba(255, 255, 255)',
-          }}
-          ref={svgRef}
-          width={width + margin.left + margin.right}
-          height={height + margin.top + margin.bottom}
-        />
-        <p className='text-center'>{xLabel}</p>
+          <div className='relative w-fit ring-2 ring-inset ring-gray-700 rounded'>
+            <p className='absolute w-full text-center rotate-[-90deg] translate-x-[-52%] translate-y-[-100%] bottom-[40%]'>{yLabel}</p>
+            {(loading && !reload) && <Loading />}
+            {error && (
+              <div className='p-4 grid place-items-center rounded-xl absolute top-0 left-0 bottom-0 right-0 bg-blue-800/10 backdrop-blur-3xl'>
+                <center>
+                  <p className='text-red'>{error}</p>
+                  <Button type='lg' styles='px-8 text-xl' onClick={doReload}>Retry</Button>
+                </center>
+              </div>
+            )}
+            {/* <Blur styles={''} /> */}
+            <svg
+              style={{
+                backgroundColor: 'rgba(255, 255, 255)',
+              }}
+              ref={svgRef}
+              width={width + margin.left + margin.right}
+              height={height + margin.top + margin.bottom}
+            />
+            <p className='text-center'>{xLabel}</p>
+          </div>
+          <figcaption className='mt-2 text-center text-xl'>{caption}</figcaption>
+          {showIndividualGA && (
+            <IndividualGAGraph
+              setShowIndividualGA={setShowIndividualGA}
+              showIndividualGA={showIndividualGA}
+              runId={selectedPoint ? selectedPoint.x : 0}
+              datapoint={selectedPoint?.generations.map((d, id) => ({
+                ...d,
+                id: id + 1
+              })) || null}
+            />
+          )}
+        </div>
       </div>
-      <figcaption className='mt-2 text-center text-xl'>{caption}</figcaption>
-      {showIndividualGA && (
-        <IndividualGAGraph
-          setShowIndividualGA={setShowIndividualGA}
-          showIndividualGA={showIndividualGA}
-          runId={selectedPoint ? selectedPoint.x : 0}
-          datapoint={selectedPoint?.generations.map((d, id) => ({
-            ...d,
-            id: id + 1
-          })) || null}
-        />
-      )}
     </div>
   );
 };
-
 
 const IndividualGAGraph = ({
   setShowIndividualGA,
